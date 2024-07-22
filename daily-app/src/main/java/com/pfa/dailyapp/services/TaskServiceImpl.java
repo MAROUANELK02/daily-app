@@ -1,11 +1,14 @@
 package com.pfa.dailyapp.services;
 
-import com.pfa.dailyapp.dtos.TaskDTO;
+import com.pfa.dailyapp.dtos.TaskDTORequest;
+import com.pfa.dailyapp.dtos.TaskDTOResponse;
 import com.pfa.dailyapp.entities.Task;
 import com.pfa.dailyapp.enums.TaskPriority;
 import com.pfa.dailyapp.enums.TaskStatus;
 import com.pfa.dailyapp.exceptions.TaskNotFoundException;
+import com.pfa.dailyapp.exceptions.UserNotFoundException;
 import com.pfa.dailyapp.mappers.TaskMapper;
+import com.pfa.dailyapp.mappers.UserMapper;
 import com.pfa.dailyapp.repositories.TaskRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,17 +17,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class TaskServiceImpl implements TaskService {
+    private final UserMapper userMapper;
     private TaskRepository taskRepository;
     private TaskMapper taskMapper;
+    private UserService userService;
 
     @Override
-    public Page<TaskDTO> getTasksByUserId(Long userId, TaskStatus status, int page, int size) {
+    public Page<TaskDTOResponse> getTasksByUserId(Long userId, TaskStatus status, int page, int size) {
         log.info("Fetching tasks for user with id: {}", userId);
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<Task> tasks = taskRepository.findByUserUserIdAndStatusOrderByPriority(userId, status, pageable);
@@ -32,25 +36,36 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO getTaskById(Long id) throws TaskNotFoundException {
+    public TaskDTOResponse getTaskById(Long id) throws TaskNotFoundException {
         log.info("Fetching task with id: {}", id);
         Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         return taskMapper.toTaskDTO(task);
     }
 
     @Override
-    public TaskDTO saveTask(TaskDTO task) {
+    public TaskDTOResponse saveTask(TaskDTORequest task, Long userId) {
         log.info("Saving task: {}", task);
         Task task1 = taskMapper.toTask(task);
+        try {
+            task1.setUser(userMapper.toUser(userService.getUserById(userId)));
+        } catch (UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         task1.setStatus(TaskStatus.IN_PROGRESS);
         task1.setCreatedAt(LocalDateTime.now());
         task1.setUpdatedAt(LocalDateTime.now());
         Task save = taskRepository.save(task1);
+        try {
+            userService.incrementTasksCount(userId);
+        } catch (UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("Task saved successfully");
         return taskMapper.toTaskDTO(save);
     }
 
     @Override
-    public TaskDTO updateTask(TaskDTO task) throws TaskNotFoundException {
+    public TaskDTOResponse updateTask(TaskDTOResponse task) throws TaskNotFoundException {
         log.info("Updating task: {}", task);
         Task task1 = taskRepository.findById(task.getTaskId()).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         if (!task1.getTitle().equals(task.getTitle()))
@@ -59,32 +74,38 @@ public class TaskServiceImpl implements TaskService {
             task1.setDescription(task.getDescription());
         task1.setUpdatedAt(LocalDateTime.now());
         Task save = taskRepository.save(task1);
+        log.info("Task updated successfully");
         return taskMapper.toTaskDTO(save);
     }
 
     @Override
-    public TaskDTO changeTaskStatus(TaskStatus status, Long id) throws TaskNotFoundException {
+    public TaskDTOResponse changeTaskStatus(TaskStatus status, Long id) throws TaskNotFoundException {
         log.info("Changing task status to: {}", status);
         Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         task.setStatus(status);
         task.setUpdatedAt(LocalDateTime.now());
         Task save = taskRepository.save(task);
+        log.info("Task status changed successfully");
         return taskMapper.toTaskDTO(save);
     }
 
     @Override
-    public TaskDTO changeTaskPriority(TaskPriority priority, Long id) throws TaskNotFoundException {
+    public TaskDTOResponse changeTaskPriority(TaskPriority priority, Long id) throws TaskNotFoundException {
         log.info("Changing task priority to: {}", priority);
         Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         task.setPriority(priority);
         task.setUpdatedAt(LocalDateTime.now());
         Task save = taskRepository.save(task);
+        log.info("Task priority changed successfully");
         return taskMapper.toTaskDTO(save);
     }
 
     @Override
-    public void deleteTask(Long id) {
+    public void deleteTask(Long id) throws TaskNotFoundException, UserNotFoundException {
         log.info("Deleting task with id: {}", id);
+        Long userId = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found")).getUser().getUserId();
         taskRepository.deleteById(id);
+        userService.decrementTasksCount(userId);
+        log.info("Task deleted successfully");
     }
 }

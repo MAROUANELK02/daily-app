@@ -1,6 +1,7 @@
 package com.pfa.dailyapp.web;
 
-import com.pfa.dailyapp.dtos.UserDTO;
+import com.pfa.dailyapp.dtos.UserDTORequest;
+import com.pfa.dailyapp.dtos.UserDTOResponse;
 import com.pfa.dailyapp.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,8 @@ public class AdminController {
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO) {
-        UserDTO saveUser = userService.saveUser(userDTO);
+    public ResponseEntity<?> addUser(@RequestBody UserDTORequest userDTORequest) {
+        UserDTOResponse saveUser = userService.saveUser(userDTORequest);
         return ResponseEntity.ok(saveUser);
     }
 

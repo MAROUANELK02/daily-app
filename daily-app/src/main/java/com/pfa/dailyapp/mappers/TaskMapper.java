@@ -1,6 +1,7 @@
 package com.pfa.dailyapp.mappers;
 
-import com.pfa.dailyapp.dtos.TaskDTO;
+import com.pfa.dailyapp.dtos.TaskDTORequest;
+import com.pfa.dailyapp.dtos.TaskDTOResponse;
 import com.pfa.dailyapp.entities.Task;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -11,17 +12,23 @@ import org.springframework.stereotype.Service;
 public class TaskMapper {
     private UserMapper userMapper;
 
-    public TaskDTO toTaskDTO(Task task) {
-        TaskDTO taskDTO = new TaskDTO();
-        BeanUtils.copyProperties(task, taskDTO);
-        taskDTO.setUserDTO(userMapper.toUserDTO(task.getUser()));
-        return taskDTO;
+    public TaskDTOResponse toTaskDTO(Task task) {
+        TaskDTOResponse taskDTOResponse = new TaskDTOResponse();
+        BeanUtils.copyProperties(task, taskDTOResponse);
+        taskDTOResponse.setUserDTOResponse(userMapper.toUserDTO(task.getUser()));
+        return taskDTOResponse;
     }
 
-    public Task toTask(TaskDTO taskDTO) {
+    public Task toTask(TaskDTOResponse taskDTOResponse) {
         Task task = new Task();
-        BeanUtils.copyProperties(taskDTO, task);
-        task.setUser(userMapper.toUser(taskDTO.getUserDTO()));
+        BeanUtils.copyProperties(taskDTOResponse, task);
+        task.setUser(userMapper.toUser(taskDTOResponse.getUserDTOResponse()));
+        return task;
+    }
+
+    public Task toTask(TaskDTORequest taskDTORequest) {
+        Task task = new Task();
+        BeanUtils.copyProperties(taskDTORequest, task);
         return task;
     }
 }

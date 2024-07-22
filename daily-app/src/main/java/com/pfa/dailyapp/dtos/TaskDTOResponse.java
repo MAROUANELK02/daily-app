@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class TaskDTO {
+public class TaskDTOResponse {
     private Long taskId;
     private String title;
     private String description;
@@ -15,5 +15,5 @@ public class TaskDTO {
     private TaskPriority priority;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private UserDTO userDTO;
+    private UserDTOResponse userDTOResponse;
 }

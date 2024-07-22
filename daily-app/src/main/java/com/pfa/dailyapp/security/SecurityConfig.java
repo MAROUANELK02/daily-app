@@ -3,7 +3,6 @@ package com.pfa.dailyapp.security;
 import com.pfa.dailyapp.security.jwt.AuthEntryPointJwt;
 import com.pfa.dailyapp.security.jwt.AuthTokenFilter;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/src/main/resources/images/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
         httpSecurity.authenticationProvider(authenticationProvider());

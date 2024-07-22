@@ -1,7 +1,8 @@
 package com.pfa.dailyapp.web;
 
-import com.pfa.dailyapp.dtos.TaskDTO;
-import com.pfa.dailyapp.dtos.UserDTO;
+import com.pfa.dailyapp.dtos.TaskDTORequest;
+import com.pfa.dailyapp.dtos.TaskDTOResponse;
+import com.pfa.dailyapp.dtos.UserDTOResponse;
 import com.pfa.dailyapp.enums.TaskPriority;
 import com.pfa.dailyapp.enums.TaskStatus;
 import com.pfa.dailyapp.exceptions.TaskNotFoundException;
@@ -11,14 +12,11 @@ import com.pfa.dailyapp.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/users")
@@ -33,7 +31,7 @@ public class UserController {
     public ResponseEntity<?> getInProgressTasksByUserId(@PathVariable("userId") Long userId,
                                                         @RequestParam(name = "page", defaultValue = "0") int page,
                                                         @RequestParam(name = "size", defaultValue = "10") int size) {
-        Page<TaskDTO> tasks = taskService.getTasksByUserId(userId, TaskStatus.IN_PROGRESS, page, size);
+        Page<TaskDTOResponse> tasks = taskService.getTasksByUserId(userId, TaskStatus.IN_PROGRESS, page, size);
         return ResponseEntity.ok(tasks);
     }
 
@@ -41,15 +39,15 @@ public class UserController {
     public ResponseEntity<?> getCompletedTasksByUserId(@PathVariable("userId") Long userId,
                                                        @RequestParam(name = "page", defaultValue = "0") int page,
                                                        @RequestParam(name = "size", defaultValue = "10") int size) {
-        Page<TaskDTO> tasks = taskService.getTasksByUserId(userId, TaskStatus.DONE, page, size);
+        Page<TaskDTOResponse> tasks = taskService.getTasksByUserId(userId, TaskStatus.DONE, page, size);
         return ResponseEntity.ok(tasks);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable("userId") Long userId) {
         try {
-            UserDTO userDTO = userService.getUserById(userId);
-            return ResponseEntity.ok(userDTO);
+            UserDTOResponse userDTOResponse = userService.getUserById(userId);
+            return ResponseEntity.ok(userDTOResponse);
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -60,18 +58,18 @@ public class UserController {
                                       @RequestParam(name = "size", defaultValue = "10") int size,
                                       @RequestParam(name = "query", required = false) String query) {
         if(query != null) {
-            Page<UserDTO> users = userService.searchUsers(query, page, size);
+            Page<UserDTOResponse> users = userService.searchUsers(query, page, size);
             return ResponseEntity.ok(users);
         }
-        Page<UserDTO> users = userService.getUsers(page, size);
+        Page<UserDTOResponse> users = userService.getUsers(page, size);
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/tasks/{taskId}")
     public ResponseEntity<?> getTaskById(@PathVariable("taskId") Long taskId) {
         try {
-            TaskDTO taskDTO = taskService.getTaskById(taskId);
-            return ResponseEntity.ok(taskDTO);
+            TaskDTOResponse taskDTOResponse = taskService.getTaskById(taskId);
+            return ResponseEntity.ok(taskDTOResponse);
         } catch (TaskNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -88,8 +86,9 @@ public class UserController {
     }
 
     @PostMapping("/task/{userId}")
-    public ResponseEntity<?> saveTask(@RequestBody TaskDTO taskDTO) {
-        TaskDTO savedTask = taskService.saveTask(taskDTO);
+    public ResponseEntity<?> saveTask(@PathVariable Long userId,
+            @RequestBody TaskDTORequest taskDTORequest) {
+        TaskDTOResponse savedTask = taskService.saveTask(taskDTORequest, userId);
         return ResponseEntity.ok(savedTask);
     }
 
@@ -97,7 +96,7 @@ public class UserController {
     public ResponseEntity<?> addImage(@PathVariable("userId") Long userId,
                                       @RequestBody MultipartFile image) {
         try {
-            UserDTO updatedUser = userService.addImage(userId, image);
+            UserDTOResponse updatedUser = userService.addImage(userId, image);
             return ResponseEntity.ok(updatedUser);
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -108,7 +107,7 @@ public class UserController {
     public ResponseEntity<?> updateImage(@PathVariable("userId") Long userId,
                                          @RequestBody MultipartFile image) {
         try {
-            UserDTO updatedUser = userService.updateImage(userId, image);
+            UserDTOResponse updatedUser = userService.updateImage(userId, image);
             return ResponseEntity.ok(updatedUser);
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -116,9 +115,9 @@ public class UserController {
     }
 
     @PutMapping("/user/update")
-    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> updateUser(@RequestBody UserDTOResponse userDTOResponse) {
         try {
-            UserDTO updatedUser = userService.updateUser(userDTO);
+            UserDTOResponse updatedUser = userService.updateUser(userDTOResponse);
             return ResponseEntity.ok(updatedUser);
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -126,9 +125,9 @@ public class UserController {
     }
 
     @PutMapping("/task/update")
-    public ResponseEntity<?> updateTask(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<?> updateTask(@RequestBody TaskDTOResponse taskDTOResponse) {
         try {
-            TaskDTO updatedTask = taskService.updateTask(taskDTO);
+            TaskDTOResponse updatedTask = taskService.updateTask(taskDTOResponse);
             return ResponseEntity.ok(updatedTask);
         } catch (TaskNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -139,7 +138,7 @@ public class UserController {
     public ResponseEntity<?> changeTaskStatus(@PathVariable("taskId") Long taskId,
                                               @RequestParam("status") TaskStatus status) {
         try {
-            TaskDTO updatedTask = taskService.changeTaskStatus(status, taskId);
+            TaskDTOResponse updatedTask = taskService.changeTaskStatus(status, taskId);
             return ResponseEntity.ok(updatedTask);
         } catch (TaskNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -150,7 +149,7 @@ public class UserController {
     public ResponseEntity<?> changeTaskPriority(@PathVariable("taskId") Long taskId,
                                                 @RequestParam("priority") TaskPriority priority) {
         try {
-            TaskDTO updatedTask = taskService.changeTaskPriority(priority, taskId);
+            TaskDTOResponse updatedTask = taskService.changeTaskPriority(priority, taskId);
             return ResponseEntity.ok(updatedTask);
         } catch (TaskNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -159,7 +158,11 @@ public class UserController {
 
     @DeleteMapping("/task/{taskId}")
     public ResponseEntity<?> deleteTask(@PathVariable("taskId") Long taskId) {
-        taskService.deleteTask(taskId);
+        try {
+            taskService.deleteTask(taskId);
+        } catch (TaskNotFoundException | UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity.ok("Task deleted successfully");
     }
 

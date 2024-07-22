@@ -54,6 +54,8 @@ public class User {
     @Value("false")
     private boolean deleted;
 
+    private int tasksCount;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

@@ -29,11 +29,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value.username,this.loginForm.value.password)
       .then((data)=>{
         this.appState.setAuthState({status:"SUCCESS", errorMessage :""})
-        if(this.appState.authState.roles.includes("ROLE_ADMIN") || this.appState.authState.roles.includes("ROLE_MODERATOR")) {
-          this.router.navigateByUrl("/users");
-        }else {
-          this.router.navigateByUrl("/user/dashboard");
-        }
+        this.router.navigateByUrl("/colleagues")
       }).catch((err)=>{
       this.appState.setAuthState({errorMessage : err, status : "ERROR"})
     })

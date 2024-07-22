@@ -1,6 +1,7 @@
 package com.pfa.dailyapp.services;
 
-import com.pfa.dailyapp.dtos.UserDTO;
+import com.pfa.dailyapp.dtos.UserDTORequest;
+import com.pfa.dailyapp.dtos.UserDTOResponse;
 import com.pfa.dailyapp.entities.User;
 import com.pfa.dailyapp.enums.ERole;
 import com.pfa.dailyapp.exceptions.UserNotFoundException;
@@ -8,12 +9,12 @@ import com.pfa.dailyapp.mappers.RoleMapper;
 import com.pfa.dailyapp.mappers.UserMapper;
 import com.pfa.dailyapp.repositories.RoleRepository;
 import com.pfa.dailyapp.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,21 +30,21 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final RoleMapper roleMapper;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${upload.path}")
     private String uploadPath;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleMapper roleMapper, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.roleMapper = roleMapper;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public Page<UserDTO> getUsers(int page, int size) {
+    public Page<UserDTOResponse> getUsers(int page, int size) {
         log.info("Getting all users");
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<User> users = userRepository.findAllByDeletedFalse(pageable);
@@ -51,24 +52,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(Long id) throws UserNotFoundException {
+    public UserDTOResponse getUserById(Long id) throws UserNotFoundException {
         log.info("Getting user by id: {}", id);
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
         return userMapper.toUserDTO(user);
     }
 
     @Override
-    public UserDTO saveUser(UserDTO user) {
-        log.info("Saving user: {}", user);
+    public UserDTOResponse saveUser(UserDTORequest userDTORequest) {
+        log.info("Saving user: {}", userDTORequest);
+        User user = userMapper.toUser(userDTORequest);
+        user.setPassword(passwordEncoder.encode(userDTORequest.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
-        user.setRoleDTOS(List.of(roleMapper.toRoleDTO(roleRepository.findByRoleName(ERole.ROLE_USER))));
-        User savedUser = userRepository.save(userMapper.toUser(user));
+        user.setRoles(List.of(roleRepository.findByRoleName(ERole.ROLE_USER)));
+        User savedUser = userRepository.save(user);
         return userMapper.toUserDTO(savedUser);
     }
 
     @Override
-    public UserDTO updateUser(UserDTO user) throws UserNotFoundException {
+    public UserDTOResponse updateUser(UserDTOResponse user) throws UserNotFoundException {
         log.info("Updating user: {}", user);
         User user1 = userRepository.findById(user.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
         if(!user1.getFirstname().equals(user.getFirstname()))
@@ -79,8 +82,6 @@ public class UserServiceImpl implements UserService {
             user1.setEmail(user.getEmail());
         if (!user1.getUsername().equals(user.getUsername()))
             user1.setUsername(user.getUsername());
-        if (!user1.getPassword().equals(user.getPassword()))
-            user1.setPassword(user.getPassword());
         if (!user1.getJobTitle().equals(user.getJobTitle()))
             user1.setJobTitle(user.getJobTitle());
         user1.setUpdatedAt(LocalDateTime.now());
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDTO> searchUsers(String query, int page, int size) {
+    public Page<UserDTOResponse> searchUsers(String query, int page, int size) {
         log.info("Searching users by query: {}", query);
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<User> users = userRepository.findAllByFirstnameContainsOrLastnameContains(query, query, pageable);
@@ -105,11 +106,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO addImage(Long userId, MultipartFile file) throws UserNotFoundException {
+    public UserDTOResponse addImage(Long userId, MultipartFile file) throws UserNotFoundException {
         log.info("Adding image to user with id: {}", userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (file.isEmpty()) {
+            log.info("File is empty");
             throw new IllegalArgumentException("File is empty");
         }
 
@@ -119,21 +121,24 @@ public class UserServiceImpl implements UserService {
         try {
             Files.write(path, file.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.info(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
 
         user.setImage(path.toString());
         user.setUpdatedAt(LocalDateTime.now());
         User save = userRepository.save(user);
+        log.info("Image added successfully");
         return userMapper.toUserDTO(save);
     }
 
     @Override
-    public UserDTO updateImage(Long userId, MultipartFile file) throws UserNotFoundException {
+    public UserDTOResponse updateImage(Long userId, MultipartFile file) throws UserNotFoundException {
         log.info("Updating image for user with id: {}", userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (file.isEmpty()) {
+            log.info("File is empty");
             throw new IllegalArgumentException("File is empty");
         }
 
@@ -143,6 +148,7 @@ public class UserServiceImpl implements UserService {
             try {
                 Files.deleteIfExists(existingImagePath);
             } catch (IOException e) {
+                log.info("Could not delete existing image");
                 throw new RuntimeException("Could not delete existing image", e);
             }
         }
@@ -153,6 +159,7 @@ public class UserServiceImpl implements UserService {
         try {
             Files.write(newPath, file.getBytes());
         } catch (IOException e) {
+            log.info("Could not save new image");
             throw new RuntimeException("Could not save new image", e);
         }
 
@@ -160,6 +167,7 @@ public class UserServiceImpl implements UserService {
         user.setImage(newPath.toString());
         user.setUpdatedAt(LocalDateTime.now());
         User updatedUser = userRepository.save(user);
+        log.info("Image updated successfully");
         return userMapper.toUserDTO(updatedUser);
     }
 
@@ -169,6 +177,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (user.getImage() == null || user.getImage().isEmpty()) {
+            log.info("Image not found for user with id: {}", userId);
             throw new RuntimeException("Image not found for user with id: " + userId);
         }
 
@@ -176,7 +185,23 @@ public class UserServiceImpl implements UserService {
         try {
             return Files.readAllBytes(path);
         } catch (IOException e) {
+            log.info("Could not read image");
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void incrementTasksCount(Long userId) throws UserNotFoundException {
+        UserDTOResponse userById = getUserById(userId);
+        userById.setTasksCount(userById.getTasksCount() + 1);
+        userRepository.save(userMapper.toUser(userById));
+    }
+
+    @Override
+    public void decrementTasksCount(Long userId) throws UserNotFoundException {
+        UserDTOResponse userById = getUserById(userId);
+        userById.setTasksCount(userById.getTasksCount() - 1);
+        userRepository.save(userMapper.toUser(userById));
+    }
+
 }
