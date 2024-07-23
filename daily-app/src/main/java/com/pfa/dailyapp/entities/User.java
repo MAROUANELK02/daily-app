@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +39,7 @@ public class User {
     private String email;
 
     @Column(unique = true)
-    @Size(min = 4, max = 30)
+    @Size(min = 8, max = 30, message = "Username must be between 8 and 30 characters long")
     @NotBlank
     private String username;
 

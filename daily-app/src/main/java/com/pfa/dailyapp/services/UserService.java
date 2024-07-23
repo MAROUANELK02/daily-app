@@ -18,4 +18,5 @@ public interface UserService {
     byte[] getImage(Long userId) throws UserNotFoundException;
     void incrementTasksCount(Long userId) throws UserNotFoundException;
     void decrementTasksCount(Long userId) throws UserNotFoundException;
+    Boolean existsByUsername(String username);
 }

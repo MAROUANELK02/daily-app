@@ -3,7 +3,6 @@ import {HttpClient} from "@angular/common/http";
 import {AppStateService} from "./app-state.service";
 import {Task} from "../models/task.model";
 import {ApiResponse} from "../models/api-response.model";
-import {User} from "../models/user.model";
 import {Observable, tap} from "rxjs";
 
 @Injectable({
@@ -49,7 +48,5 @@ export class TasksRepositoryService {
       })
     );
   }
-
-
 
 }

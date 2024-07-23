@@ -3,14 +3,13 @@
     Daily Meeting
   </a>
 
-  <ul class="nav nav-pills me-auto my-2 my-lg-0"
-      *ngIf="appState.authState.roles.includes('ROLE_USER')">
+  <ul class="nav nav-pills me-auto my-2 my-lg-0" *ngIf="appState.authState.roles.includes('ROLE_USER')">
     <li class="nav-item">
       <button routerLink="/colleagues" class="nav-link">
         Mes Collègues
       </button>
     </li>
-   <li class="nav-item dropdown">
+    <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         Mes tâches
       </a>
@@ -26,8 +25,7 @@
         <li><a class="dropdown-item" routerLink="/tasksHistory">Historique des tâches</a></li>
       </ul>
     </li>
-    <li class="nav-item"
-        *ngIf="appState.authState.roles.includes('ROLE_ADMIN')">
+    <li class="nav-item" *ngIf="appState.authState.roles.includes('ROLE_ADMIN')">
       <a routerLink="/addColleague" class="nav-link">
         Ajouter un collègue
       </a>

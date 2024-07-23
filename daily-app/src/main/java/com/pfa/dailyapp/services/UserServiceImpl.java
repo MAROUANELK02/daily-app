@@ -204,4 +204,9 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userMapper.toUser(userById));
     }
 
+    @Override
+    public Boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
 }

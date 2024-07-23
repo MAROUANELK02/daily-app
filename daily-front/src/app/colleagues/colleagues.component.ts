@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AppStateService} from "../services/app-state.service";
 import {ColleaguesRepositoryService} from "../services/colleagues.repository.service";
-import {forkJoin, Observable, switchMap} from "rxjs";
+import {catchError, forkJoin, Observable, of, switchMap} from "rxjs";
 import {User} from "../models/user.model";
 import {TasksRepositoryService} from "../services/tasks.repository.service";
 import {Task} from "../models/task.model";

@@ -4,6 +4,7 @@ export class User {
   lastname!: string;
   email!: string;
   username!: string;
+  password!: string;
   jobTitle!: string;
   image!: string;
   tasksCount!: number;

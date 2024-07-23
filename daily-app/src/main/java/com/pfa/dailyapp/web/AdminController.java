@@ -3,6 +3,7 @@ package com.pfa.dailyapp.web;
 import com.pfa.dailyapp.dtos.UserDTORequest;
 import com.pfa.dailyapp.dtos.UserDTOResponse;
 import com.pfa.dailyapp.services.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +24,7 @@ public class AdminController {
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<?> addUser(@RequestBody UserDTORequest userDTORequest) {
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserDTORequest userDTORequest) {
         UserDTOResponse saveUser = userService.saveUser(userDTORequest);
         return ResponseEntity.ok(saveUser);
     }
@@ -36,5 +37,10 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/existsByUsername/{username}")
+    public ResponseEntity<?> existsByUsername(@PathVariable("username") String username) {
+        return ResponseEntity.ok(userService.existsByUsername(username));
     }
 }

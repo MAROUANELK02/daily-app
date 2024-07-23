@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {AppStateService} from "./app-state.service";
 import {User} from "../models/user.model";
 import {ApiResponse} from "../models/api-response.model";
-import {map, Observable, tap} from "rxjs";
+import {catchError, map, Observable, of, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +43,9 @@ export class ColleaguesRepositoryService implements OnInit{
       map((imageBlob: Blob) => {
         const url = window.URL.createObjectURL(imageBlob);
         return url;
+      }),
+      catchError(() => {
+        return of('/profile.jpg');
       })
     );
   }

@@ -30,16 +30,16 @@ public class DailyAppApplication {
                                         RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         return args -> {
 
-            List<Role> adminRoles = List.of(Role.builder().roleName(ERole.ROLE_ADMIN).build(),
+            List<Role> roles = List.of(Role.builder().roleName(ERole.ROLE_ADMIN).build(),
                     Role.builder().roleName(ERole.ROLE_USER).build());
-            roleRepository.saveAll(adminRoles);
+            roleRepository.saveAll(roles);
 
             User user1 = User.builder()
                     .firstname("Mehdi")
                     .lastname("chef")
                     .email("mehdichef@example.com")
                     .username("mehdichef")
-                    .password(passwordEncoder.encode("password"))
+                    .password(passwordEncoder.encode("Pass@word1"))
                     .jobTitle("Chef projet")
                     .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_ADMIN),
                             roleRepository.findByRoleName(ERole.ROLE_USER)))
@@ -52,7 +52,7 @@ public class DailyAppApplication {
                     .lastname("sales")
                     .email("sarasales@example.com")
                     .username("sarasales")
-                    .password(passwordEncoder.encode("password"))
+                    .password(passwordEncoder.encode("Pass@word1"))
                     .jobTitle("Sales manager")
                     .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_USER)))
                     .createdAt(LocalDateTime.now())
@@ -64,7 +64,7 @@ public class DailyAppApplication {
                     .lastname("ghelab")
                     .email("nassimghelab@example.com")
                     .username("nassimghelab")
-                    .password(passwordEncoder.encode("password"))
+                    .password(passwordEncoder.encode("Pass@word1"))
                     .jobTitle("Software engineer")
                     .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_USER)))
                     .createdAt(LocalDateTime.now())
