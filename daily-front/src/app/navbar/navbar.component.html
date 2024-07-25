@@ -33,11 +33,31 @@
   </ul>
 
   <ul class="nav nav-pills">
-    <li *ngIf="appState.authState.isAuthenticated">
-      <span class="p-1 m-1">{{appState.authState.username}}</span>
-      <button (click)="handleLogOut()" class="btn btn-outline-success m-2">
-        <i class="bi bi-door-open-fill"></i>
+    <li *ngIf="appState.authState.isAuthenticated" class="mr-3 relative">
+      <button type="button" (click)="openDropDown()" class="flex text-sm bg-gray-800 rounded-full md:me-0
+  focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false"
+        data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+        <span class="sr-only">Open user menu</span>
+        <img class="w-10 h-10 rounded-full" [src]="this.appState.authState.imageUri" alt="user photo">
       </button>
+      <!-- Dropdown menu -->
+      <div *ngIf="openClose" class="absolute right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100
+  rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+        <div class="px-4 py-3">
+          <span class="block text-sm text-gray-900 dark:text-white">
+            {{ appState.authState.username }}
+          </span>
+          <span class="block text-sm text-gray-500 truncate dark:text-gray-400">
+            {{ appState.authState.email }}
+          </span>
+        </div>
+        <ul class="py-2" aria-labelledby="user-menu-button">
+          <li>
+            <button (click)="handleLogOut()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100
+        dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Out</button>
+          </li>
+        </ul>
+      </div>
     </li>
     <li *ngIf="!appState.authState.isAuthenticated">
       <button (click)="handleLogin()" class="btn btn-outline-success m-2">

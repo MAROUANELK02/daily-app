@@ -10,6 +10,7 @@ export class AppStateService {
     username:"",
     id:"",
     email:"",
+    imageUri:"",
     roles :[],
     token :"",
     status :"",
@@ -35,6 +36,15 @@ export class AppStateService {
     errorMessage :""
   }
 
+  public completedTasksState :any={
+    tasks:[],
+    totalPages:0,
+    currentPage : 0,
+    pageSize: 6,
+    status :"",
+    errorMessage :""
+  }
+
   public setAuthState(state:any){
     this.authState={...this.authState, ...state};
   }
@@ -45,6 +55,10 @@ export class AppStateService {
 
   public setTasksState(state:any){
     this.tasksState={...this.tasksState, ...state};
+  }
+
+  public setCompletedTasksState(state:any){
+    this.completedTasksState={...this.completedTasksState, ...state};
   }
 
   constructor() { }

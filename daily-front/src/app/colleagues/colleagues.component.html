@@ -1,18 +1,28 @@
 <div class="container mx-auto m-3">
   <!-- Search Field -->
   <div class="mb-3">
-    <input type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="Rechercher..."
-      [(ngModel)]="searchQuery" (input)="initiateSearch()">
+    <div class="relative">
+      <div class="absolute inset-y-0 start-0 flex items-center pl-3 pointer-events-none mr-3">
+        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+        </svg>
+      </div>
+      <input type="search" id="default-search" class="block w-full p-2 pl-12 text-sm text-gray-900 border
+    border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700
+    dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
+    dark:focus:border-blue-500" placeholder="          Rechercher..." [(ngModel)]="searchQuery"
+             (input)="initiateSearch()"/>
+    </div>
   </div>
 
   <!-- User Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     <div *ngFor="let user of this.appState.usersState.users" [ngClass]="getUserCardClass(user.tasksCount)"
       class="shadow-lg rounded-lg text-center p-6">
       <img [src]="userImageUrls[user.userId]" class="rounded-full mx-auto mb-3" style="width: 100px; height: 100px;"
         alt="User Image">
       <h5 class="text-lg font-semibold">{{ user.firstname + " " + user.lastname }}</h5>
-      <p class="text-gray-500">{{ user.jobTitle }}</p>
+      <p class="text-gray-1000">{{ user.jobTitle }}</p>
       <button class="btn btn-primary mt-3" (click)="openModal(user)">Voir les tâches</button>
     </div>
   </div>

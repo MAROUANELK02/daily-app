@@ -20,15 +20,17 @@ export class TasksRepositoryService {
         this.appState.setTasksState({status:"SUCCESS", errorMessage:""});
       },
       error : (err)=>{
-        this.appState.setUsersState({status:"ERROR", errorMessage:err.statusText});
+        this.appState.setTasksState({status:"ERROR", errorMessage:err.statusText});
       }
     });
   }
 
   getInProgressTasksByUserId(
     userId: number,
-    {currentPage = this.appState.tasksState.currentPage,
-      size = this.appState.tasksState.pageSize}): Observable<ApiResponse<Task>> {
+    {
+      currentPage = this.appState.tasksState.currentPage,
+      size = this.appState.tasksState.pageSize
+    }): Observable<ApiResponse<Task>> {
     this.appState.tasksState.status = "LOADING";
     return this.http.get<ApiResponse<Task>>(this.host + "/" + userId + "/tasks/inProgress", {
       params: {
@@ -43,7 +45,34 @@ export class TasksRepositoryService {
           this.appState.setTasksState({ tasks, totalPages, currentPage, status: "LOADED", errorMessage: "" });
         },
         error: (err) => {
-          this.appState.setUsersState({ status: "ERROR", errorMessage: err.statusText });
+          this.appState.setTasksState({ status: "ERROR", errorMessage: err.statusText });
+        }
+      })
+    );
+  }
+
+  getCompletedTasksByUserId(
+    userId: number,
+    {
+      currentPage = this.appState.completedTasksState.currentPage,
+      size = this.appState.completedTasksState.pageSize
+    }
+  ): Observable<ApiResponse<Task>> {
+    this.appState.completedTasksState.status = "LOADING";
+    return this.http.get<ApiResponse<Task>>(this.host + "/" + userId + "/tasks/completed", {
+      params: {
+        page: currentPage,
+        size: size
+      }
+    }).pipe(
+      tap({
+        next: (data: ApiResponse<Task>) => {
+          let tasks = data.content;
+          let totalPages = data.totalPages;
+          this.appState.setCompletedTasksState({tasks, totalPages, currentPage, status: "LOADED", errorMessage: ""});
+        },
+        error: (err) => {
+          this.appState.setCompletedTasksState({status: "ERROR", errorMessage: err.statusText});
         }
       })
     );

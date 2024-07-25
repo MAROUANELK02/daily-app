@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {AppStateService} from "./app-state.service";
+import {ColleaguesRepositoryService} from "./colleagues.repository.service";
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,8 @@ import {AppStateService} from "./app-state.service";
 export class AuthRepositoryService {
   host:string = "http://localhost:5000/api/auth/signin";
 
-  constructor(private http : HttpClient, private appState : AppStateService) {
+  constructor(private http : HttpClient, private appState : AppStateService,
+              private userService : ColleaguesRepositoryService) {
     this.loadAuthState();
   }
 
@@ -28,7 +30,15 @@ export class AuthRepositoryService {
           token: data.token
         };
         this.appState.setAuthState(authState);
-        localStorage.setItem('authState', JSON.stringify(authState));
+        this.userService.getUserImageById(authState.id).subscribe(
+          imageUri => {
+            const updatedAuthState = {
+              ...authState,
+              imageUri: imageUri
+            };
+            this.appState.setAuthState(updatedAuthState);
+            localStorage.setItem('authState', JSON.stringify(updatedAuthState));
+          });
         return Promise.resolve(true);
       } else {
         return Promise.reject("Bad Credentials");
@@ -44,6 +54,7 @@ export class AuthRepositoryService {
       username: "",
       id: "",
       email: "",
+      imageUri: "",
       roles: [],
       token: ""
     });

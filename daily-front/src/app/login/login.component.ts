@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
         this.router.navigateByUrl("/colleagues")
       }).catch((err)=>{
       this.appState.setAuthState({errorMessage : err, status : "ERROR"})
-    })
+      window.alert(err)
+    });
   }
 }

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AppStateService} from "../services/app-state.service";
 import {ColleaguesRepositoryService} from "../services/colleagues.repository.service";
-import {catchError, forkJoin, Observable, of, switchMap} from "rxjs";
+import {forkJoin, Observable, of, switchMap} from "rxjs";
 import {User} from "../models/user.model";
 import {TasksRepositoryService} from "../services/tasks.repository.service";
 import {Task} from "../models/task.model";
@@ -51,14 +51,12 @@ export class ColleaguesComponent implements OnInit {
   }
 
   getUserCardClass(tasksCount: number): string {
-    if (tasksCount <= 2) {
-      return 'bg-green-200'; // Background green for low load
+    if (tasksCount <= 1) {
+      return 'bg-green-400'; // Background green for low load
     } else if (tasksCount <= 3) {
-      return 'bg-yellow-200'; // Background yellow for moderate load
-    } else if (tasksCount <= 4) {
-      return 'bg-orange-200'; // Background orange for high load
+      return 'bg-yellow-300'; // Background yellow for moderate load
     } else {
-      return 'bg-red-200'; // Background red for critical load
+      return 'bg-red-500'; // Background red for critical load
     }
   }
 
