@@ -1,9 +1,14 @@
 package com.pfa.dailyapp.web;
 
 import com.pfa.dailyapp.dtos.LoginRequest;
+import com.pfa.dailyapp.dtos.OtpDTO;
 import com.pfa.dailyapp.dtos.UserInfoResponse;
+import com.pfa.dailyapp.exceptions.UserNotFoundException;
 import com.pfa.dailyapp.security.UserDetailsImpl;
 import com.pfa.dailyapp.security.jwt.JwtUtils;
+import com.pfa.dailyapp.security.mailing.EmailSenderService;
+import com.pfa.dailyapp.services.OtpService;
+import com.pfa.dailyapp.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +31,10 @@ import java.util.stream.Collectors;
 public class SignInController {
     private AuthenticationManager authenticationManager;
     private JwtUtils jwtUtils;
+    private OtpService otpService;
+    private UserService userService;
+    private EmailSenderService emailService;
+
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -56,4 +65,39 @@ public class SignInController {
                 userDetails.getEmail(),
                 roles));
     }
+
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam(name = "email") String email) {
+        if (!userService.existsByEmail(email)) {
+            return ResponseEntity.badRequest().body("Email not found");
+        }
+
+        String otp = otpService.generateOtp();
+        otpService.saveOtp(email, otp);
+        emailService.sendEmail(email, otp);
+
+        return ResponseEntity.ok("OTP sent to email");
+    }
+
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody OtpDTO request) {
+        if(request.getPassword().equals(request.getConfirmedPassword())) {
+            if (!otpService.validateOtp(request.getEmail(), request.getOtpCode())) {
+                return ResponseEntity.badRequest().body("Invalid OTP");
+            }
+            try {
+                userService.resetPassword(request.getEmail(), request.getConfirmedPassword());
+                otpService.deleteOtp(request.getEmail());
+                return ResponseEntity.ok("Password reset successful");
+            } catch (UserNotFoundException e) {
+                log.error(e.getMessage());
+                return ResponseEntity.badRequest().body("User not Found !");
+            }
+        } else {
+            return ResponseEntity.badRequest().body("Passwords don't matches");
+        }
+    }
+
 }

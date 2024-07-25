@@ -19,4 +19,6 @@ public interface UserService {
     void incrementTasksCount(Long userId) throws UserNotFoundException;
     void decrementTasksCount(Long userId) throws UserNotFoundException;
     Boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
+    void resetPassword(String email, String confirmedPassword) throws UserNotFoundException;
 }

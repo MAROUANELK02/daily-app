@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAllByFirstnameContainsOrLastnameContains(String firstname, String lastname, Pageable pageable);
     User findByUsernameOrEmail(String username, String email);
+    User findByEmail(String email);
     Page<User> findAllByDeletedFalse(Pageable pageable);
     Boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }

@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 public class EmailSenderService {
     private JavaMailSender mailSender;
 
-    public void sendEmail(String toEmail,String subject,String body) {
+    public void sendEmail(String toEmail,String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("marouanelk02@gmail.com");
         message.setTo(toEmail);
-        message.setSubject(subject);
-        message.setText(body);
+        message.setSubject("Vérification OTP");
+        message.setText("Votre code de vérification expire dans 10 minutes : " + body);
 
         mailSender.send(message);
 

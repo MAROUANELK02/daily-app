@@ -209,4 +209,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByUsername(username);
     }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public void resetPassword(String email, String confirmedPassword) throws UserNotFoundException {
+        if(userRepository.existsByEmail(email)) {
+            User user = userRepository.findByEmail(email);
+            user.setPassword(passwordEncoder.encode(confirmedPassword));
+            userRepository.save(user);
+        } else {
+            throw new UserNotFoundException("User not found !");
+        }
+    }
+
 }
