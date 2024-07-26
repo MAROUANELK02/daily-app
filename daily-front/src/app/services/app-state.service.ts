@@ -22,7 +22,13 @@ export class AppStateService {
     totalPages:0,
     keyword:"",
     currentPage : 0,
-    pageSize: 6,
+    pageSize: 8,
+    status :"",
+    errorMessage :""
+  }
+
+  public changePasswordState :any={
+    email:"",
     status :"",
     errorMessage :""
   }
@@ -61,5 +67,8 @@ export class AppStateService {
     this.completedTasksState={...this.completedTasksState, ...state};
   }
 
-  constructor() { }
+  public setChangePasswordState(state:any) {
+    this.changePasswordState={...this.changePasswordState, ...state};
+  }
+
 }

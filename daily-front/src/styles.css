@@ -5,3 +5,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-custom {
+  @apply bg-gray-100 dark:bg-gray-900;
+}
+

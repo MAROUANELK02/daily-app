@@ -31,8 +31,9 @@ export class LoginComponent implements OnInit {
         this.appState.setAuthState({status:"SUCCESS", errorMessage :""})
         this.router.navigateByUrl("/colleagues")
       }).catch((err)=>{
+        console.log(err)
       this.appState.setAuthState({errorMessage : err, status : "ERROR"})
-      window.alert(err)
+      window.alert(err.error.message)
     });
   }
 }

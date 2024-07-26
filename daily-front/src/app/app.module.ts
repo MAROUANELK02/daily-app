@@ -29,7 +29,7 @@ import {QuillModule} from "ngx-quill";
     AddTaskComponent,
     TasksHistoryComponent,
     AddColleagueComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
   ],
   imports: [
     BrowserModule,

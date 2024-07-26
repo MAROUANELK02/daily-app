@@ -1,8 +1,6 @@
 package com.pfa.dailyapp.web;
 
-import com.pfa.dailyapp.dtos.LoginRequest;
-import com.pfa.dailyapp.dtos.OtpDTO;
-import com.pfa.dailyapp.dtos.UserInfoResponse;
+import com.pfa.dailyapp.dtos.*;
 import com.pfa.dailyapp.exceptions.UserNotFoundException;
 import com.pfa.dailyapp.security.UserDetailsImpl;
 import com.pfa.dailyapp.security.jwt.JwtUtils;
@@ -70,33 +68,32 @@ public class SignInController {
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam(name = "email") String email) {
         if (!userService.existsByEmail(email)) {
-            return ResponseEntity.badRequest().body("Email not found");
+            return ResponseEntity.badRequest().body(new ErrorResponse("Email not found"));
         }
 
         String otp = otpService.generateOtp();
         otpService.saveOtp(email, otp);
         emailService.sendEmail(email, otp);
 
-        return ResponseEntity.ok("OTP sent to email");
+        return ResponseEntity.ok(new SuccessResponse("OTP sent to email"));
     }
-
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody OtpDTO request) {
-        if(request.getPassword().equals(request.getConfirmedPassword())) {
+        if (request.getPassword().equals(request.getConfirmedPassword())) {
             if (!otpService.validateOtp(request.getEmail(), request.getOtpCode())) {
-                return ResponseEntity.badRequest().body("Invalid OTP");
+                return ResponseEntity.badRequest().body(new ErrorResponse("Invalid OTP"));
             }
             try {
                 userService.resetPassword(request.getEmail(), request.getConfirmedPassword());
                 otpService.deleteOtp(request.getEmail());
-                return ResponseEntity.ok("Password reset successful");
+                return ResponseEntity.ok(new SuccessResponse("Password reset successful"));
             } catch (UserNotFoundException e) {
                 log.error(e.getMessage());
-                return ResponseEntity.badRequest().body("User not Found !");
+                return ResponseEntity.badRequest().body(new ErrorResponse("User not Found !"));
             }
         } else {
-            return ResponseEntity.badRequest().body("Passwords don't matches");
+            return ResponseEntity.badRequest().body(new ErrorResponse("Passwords don't match"));
         }
     }
 

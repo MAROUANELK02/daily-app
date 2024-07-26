@@ -44,7 +44,7 @@ export class AuthRepositoryService {
         return Promise.reject("Bad Credentials");
       }
     } catch (e) {
-      return Promise.reject("Network error");
+      return Promise.reject(e);
     }
   }
 
