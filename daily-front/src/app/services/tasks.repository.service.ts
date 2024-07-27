@@ -78,4 +78,19 @@ export class TasksRepositoryService {
     );
   }
 
+  changePriority(task: Task) : Observable<any> {
+    return this.http.patch(`${this.host}/task/${task.taskId}/priority`, {}, {
+      params: {
+        priority: task.priority
+      }
+    });
+  }
+
+  changeStatus(task: Task) : Observable<any> {
+    return this.http.patch(`${this.host}/task/${task.taskId}/status`, {}, {
+      params: {
+        status: task.status
+      }
+    });
+  }
 }

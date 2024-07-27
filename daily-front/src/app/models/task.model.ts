@@ -9,4 +9,5 @@ export class Task {
   createdAt!: string;
   updatedAt!: string;
   userDTO!: User;
+  dropdownOpen: boolean = false;
 }

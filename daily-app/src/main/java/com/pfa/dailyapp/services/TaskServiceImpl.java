@@ -79,12 +79,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTOResponse changeTaskStatus(TaskStatus status, Long id) throws TaskNotFoundException {
+    public TaskDTOResponse changeTaskStatus(TaskStatus status, Long id) throws TaskNotFoundException, UserNotFoundException {
         log.info("Changing task status to: {}", status);
         Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         task.setStatus(status);
         task.setUpdatedAt(LocalDateTime.now());
         Task save = taskRepository.save(task);
+        if(status.equals(TaskStatus.DONE))
+            userService.decrementTasksCount(save.getUser().getUserId());
+        else if(status.equals(TaskStatus.IN_PROGRESS))
+            userService.incrementTasksCount(save.getUser().getUserId());
         log.info("Task status changed successfully");
         return taskMapper.toTaskDTO(save);
     }

@@ -2,19 +2,69 @@
 
   <!-- In-progress tasks column -->
   <div class="w-1/2 max-w-md flex flex-col">
+
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-lg font-semibold">En Cours ({{ tasks.length }})</h2>
       <button class="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full" routerLink="/addTask">+</button>
     </div>
+
     <div class="space-y-2 flex-grow overflow-y-auto">
       <div
-        [ngClass]="{'bg-pink-200': task.priority === 'HIGH', 'bg-blue-200': task.priority === 'MEDIUM', 'bg-green-200': task.priority === 'LOW'}"
-        class="p-2 rounded-lg shadow text-sm max-w-sm" *ngFor="let task of tasks">
+        [ngClass]="{'bg-red-500': task.priority === 'HIGH', 'bg-yellow-300': task.priority === 'MEDIUM', 'bg-green-400': task.priority === 'LOW'}"
+        class="p-2 rounded-lg shadow text-sm max-w-sm relative" *ngFor="let task of tasks">
         <h3 class="font-bold text-base">{{ task.title }}</h3>
         <p class="text-sm"><span class="font-semibold">Description:</span> <br><span [innerHTML]="task.description"></span></p>
         <p class="text-sm"><span class="font-semibold">Priorité:</span> {{ task.priority === 'HIGH' ? 'Urgente' : task.priority === 'MEDIUM' ? 'Moyenne' : 'Normale' }}</p>
+
+        <div class="flex space-x-2">
+          <button id="dropdownRadioBgHoverButton" (click)="toggleDropdown(task)" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+            Priorité
+            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+          </button>
+
+          <button (click)="completeTask(task)" class="ms-2 text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-3 py-1 text-center inline-flex items-center dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800" type="button">
+            Compléter
+            <svg class="w-4 h-4 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Dropdown menu -->
+        <div [ngClass]="{'hidden': !task.dropdownOpen}" class="absolute z-10 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
+          <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRadioBgHoverButton">
+            <li>
+              <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                <input (change)="changePriority(task, 'HIGH')" id="default-radio-4-{{task.taskId}}" type="radio" value="HIGH" [name]="'priority-' + task.taskId" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                <label [for]="'default-radio-4-' + task.taskId" class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">
+                  Urgente
+                </label>
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                <input (change)="changePriority(task, 'MEDIUM')" id="default-radio-5-{{task.taskId}}" type="radio" value="MEDIUM" [name]="'priority-' + task.taskId" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                <label [for]="'default-radio-5-' + task.taskId" class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">
+                  Moyenne
+                </label>
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                <input (change)="changePriority(task, 'LOW')" id="default-radio-6-{{task.taskId}}" type="radio" value="LOW" [name]="'priority-' + task.taskId" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                <label [for]="'default-radio-6-' + task.taskId" class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">
+                  Normale
+                </label>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
+
+
     <nav class="mt-3">
       <ul class="flex justify-center space-x-1">
         <li>
@@ -31,22 +81,32 @@
         </li>
       </ul>
     </nav>
+
   </div>
 
   <!-- Completed tasks column -->
   <div class="w-1/2 max-w-md flex flex-col">
+
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-lg font-semibold">Complétées ({{ completedTasks.length }})</h2>
     </div>
+
     <div class="space-y-2 flex-grow overflow-y-auto">
       <div
-        [ngClass]="{'bg-pink-200': task.priority === 'HIGH', 'bg-blue-200': task.priority === 'MEDIUM', 'bg-green-200': task.priority === 'LOW'}"
+        [ngClass]="{'bg-red-500': task.priority === 'HIGH', 'bg-yellow-300': task.priority === 'MEDIUM', 'bg-green-400': task.priority === 'LOW'}"
         class="p-2 rounded-lg shadow text-sm max-w-sm" *ngFor="let task of completedTasks">
         <h3 class="font-bold text-base">{{ task.title }}</h3>
         <p class="text-sm"><span class="font-semibold">Description:</span> <br><span [innerHTML]="task.description"></span></p>
         <p class="text-sm"><span class="font-semibold">Priorité:</span> {{ task.priority === 'HIGH' ? 'Urgente' : task.priority === 'MEDIUM' ? 'Moyenne' : 'Normale' }}</p>
+        <button (click)="reopenTask(task)" class="ms-2 text-white bg-indigo-600 hover:bg-indigo-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-3 py-1 text-center inline-flex items-center dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-800" type="button">
+          Reprendre
+          <svg class="w-4 h-4 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
       </div>
     </div>
+
     <nav class="mt-3">
       <ul class="flex justify-center space-x-1">
         <li>
@@ -63,6 +123,7 @@
         </li>
       </ul>
     </nav>
+
   </div>
 
 </div>

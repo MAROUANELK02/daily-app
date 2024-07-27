@@ -140,7 +140,7 @@ public class UserController {
         try {
             TaskDTOResponse updatedTask = taskService.changeTaskStatus(status, taskId);
             return ResponseEntity.ok(updatedTask);
-        } catch (TaskNotFoundException e) {
+        } catch (TaskNotFoundException | UserNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

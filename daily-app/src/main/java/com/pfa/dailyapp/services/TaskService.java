@@ -13,7 +13,7 @@ public interface TaskService {
     TaskDTOResponse getTaskById(Long id) throws TaskNotFoundException;
     TaskDTOResponse saveTask(TaskDTORequest task, Long userId);
     TaskDTOResponse updateTask(TaskDTOResponse task) throws TaskNotFoundException;
-    TaskDTOResponse changeTaskStatus(TaskStatus status, Long id) throws TaskNotFoundException;
+    TaskDTOResponse changeTaskStatus(TaskStatus status, Long id) throws TaskNotFoundException, UserNotFoundException;
     TaskDTOResponse changeTaskPriority(TaskPriority priority, Long id) throws TaskNotFoundException;
     void deleteTask(Long id) throws TaskNotFoundException, UserNotFoundException;
 }
