@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {AppStateService} from "./services/app-state.service";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'daily_frontend';
+  constructor(public appState : AppStateService) {
+  }
 }

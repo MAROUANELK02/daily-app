@@ -1,70 +1,68 @@
-<div class="flex justify-between h-screen p-4 space-x-4">
+<div class="flex justify-between min-h-screen space-x-4 bg-gray-100 p-4">
+
   <!-- In-progress tasks column -->
-  <div class="w-3/4 flex flex-col justify-between">
-    <div class="flex flex-col flex-grow">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">En Cours ({{ tasks.length }})</h2>
-        <button class="bg-gray-200 p-2 rounded-full" routerLink="/addTask">+</button>
-      </div>
-      <div class="space-y-4 flex-grow overflow-y-auto">
-        <div
-          [ngClass]="{'bg-pink-200': task.priority === 'HIGH', 'bg-blue-200': task.priority === 'MEDIUM', 'bg-green-200': task.priority === 'LOW'}"
-          class="bg-pink-200 p-4 rounded-lg shadow" *ngFor="let task of this.tasks">
-          <h3 class="font-bold">{{ task.title }}</h3>
-          <p class="text-lg"><span class="font-semibold">Description:</span> <br><span [innerHTML]="task.description"></span></p>
-          <p class="text-lg"><span class="font-semibold">Priorité:</span> {{ task.priority === "HIGH" ? 'Urgente' : task.priority === "MEDIUM" ? 'Moyenne' : 'Normale' }}</p>
-        </div>
+  <div class="w-1/2 max-w-md flex flex-col">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold">En Cours ({{ tasks.length }})</h2>
+      <button class="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full" routerLink="/addTask">+</button>
+    </div>
+    <div class="space-y-2 flex-grow overflow-y-auto">
+      <div
+        [ngClass]="{'bg-pink-200': task.priority === 'HIGH', 'bg-blue-200': task.priority === 'MEDIUM', 'bg-green-200': task.priority === 'LOW'}"
+        class="p-2 rounded-lg shadow text-sm max-w-sm" *ngFor="let task of tasks">
+        <h3 class="font-bold text-base">{{ task.title }}</h3>
+        <p class="text-sm"><span class="font-semibold">Description:</span> <br><span [innerHTML]="task.description"></span></p>
+        <p class="text-sm"><span class="font-semibold">Priorité:</span> {{ task.priority === 'HIGH' ? 'Urgente' : task.priority === 'MEDIUM' ? 'Moyenne' : 'Normale' }}</p>
       </div>
     </div>
-    <nav class="mt-4">
+    <nav class="mt-3">
       <ul class="flex justify-center space-x-1">
         <li>
-          <button class="px-3 py-1 bg-gray-200 rounded" (click)="prevPage()">Previous</button>
+          <button class="px-2 py-1 bg-gray-200 rounded" (click)="prevPage()">Previous</button>
         </li>
         <li *ngFor="let page of [].constructor(appState.tasksState.totalPages); let index = index">
-          <button class="px-3 py-1 bg-gray-200 rounded" (click)="goToPage(index)"
-                  [ngClass]="{'bg-blue-500 text-white': appState.tasksState.currentPage === index}">
+          <button class="px-2 py-1 bg-gray-200 rounded" (click)="goToPage(index)"
+                  [ngClass]="{'bg-blue-500 text-black': appState.tasksState.currentPage === index}">
             {{ index + 1 }}
           </button>
         </li>
         <li>
-          <button class="px-3 py-1 bg-gray-200 rounded" (click)="nextPage()">Next</button>
+          <button class="px-2 py-1 bg-gray-200 rounded" (click)="nextPage()">Next</button>
         </li>
       </ul>
     </nav>
   </div>
 
   <!-- Completed tasks column -->
-  <div class="w-3/4 flex flex-col justify-between">
-    <div class="flex flex-col flex-grow">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">Complétées ({{ completedTasks.length }})</h2>
-      </div>
-      <div class="space-y-4 flex-grow overflow-y-auto">
-        <div
-          [ngClass]="{'bg-pink-200': task.priority === 'HIGH', 'bg-blue-200': task.priority === 'MEDIUM', 'bg-green-200': task.priority === 'LOW'}"
-          class="bg-pink-200 p-4 rounded-lg shadow" *ngFor="let task of this.completedTasks">
-          <h3 class="font-bold">{{ task.title }}</h3>
-          <p class="text-lg"><span class="font-semibold">Description:</span> <br><span [innerHTML]="task.description"></span></p>
-          <p class="text-lg"><span class="font-semibold">Priorité:</span> {{ task.priority === "HIGH" ? 'Urgente' : task.priority === "MEDIUM" ? 'Moyenne' : 'Normale' }}</p>
-        </div>
+  <div class="w-1/2 max-w-md flex flex-col">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold">Complétées ({{ completedTasks.length }})</h2>
+    </div>
+    <div class="space-y-2 flex-grow overflow-y-auto">
+      <div
+        [ngClass]="{'bg-pink-200': task.priority === 'HIGH', 'bg-blue-200': task.priority === 'MEDIUM', 'bg-green-200': task.priority === 'LOW'}"
+        class="p-2 rounded-lg shadow text-sm max-w-sm" *ngFor="let task of completedTasks">
+        <h3 class="font-bold text-base">{{ task.title }}</h3>
+        <p class="text-sm"><span class="font-semibold">Description:</span> <br><span [innerHTML]="task.description"></span></p>
+        <p class="text-sm"><span class="font-semibold">Priorité:</span> {{ task.priority === 'HIGH' ? 'Urgente' : task.priority === 'MEDIUM' ? 'Moyenne' : 'Normale' }}</p>
       </div>
     </div>
-    <nav class="mt-4">
+    <nav class="mt-3">
       <ul class="flex justify-center space-x-1">
         <li>
-          <button class="px-3 py-1 bg-gray-200 rounded" (click)="completedPrevPage()">Previous</button>
+          <button class="px-2 py-1 bg-gray-200 rounded" (click)="completedPrevPage()">Previous</button>
         </li>
         <li *ngFor="let page of [].constructor(appState.completedTasksState.totalPages); let index = index">
-          <button class="px-3 py-1 bg-gray-200 rounded" (click)="completedGoToPage(index)"
-                  [ngClass]="{'bg-blue-500 text-white': appState.completedTasksState.currentPage === index}">
+          <button class="px-2 py-1 bg-gray-200 rounded" (click)="completedGoToPage(index)"
+                  [ngClass]="{'bg-blue-500 text-black': appState.completedTasksState.currentPage === index}">
             {{ index + 1 }}
           </button>
         </li>
         <li>
-          <button class="px-3 py-1 bg-gray-200 rounded" (click)="completedNextPage()">Next</button>
+          <button class="px-2 py-1 bg-gray-200 rounded" (click)="completedNextPage()">Next</button>
         </li>
       </ul>
     </nav>
   </div>
+
 </div>

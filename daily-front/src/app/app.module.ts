@@ -18,6 +18,7 @@ import { AddColleagueComponent } from './add-colleague/add-colleague.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import {QuillModule} from "ngx-quill";
 import { ProfileComponent } from './profile/profile.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ProfileComponent } from './profile/profile.component';
     AddColleagueComponent,
     ForgotPasswordComponent,
     ProfileComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,

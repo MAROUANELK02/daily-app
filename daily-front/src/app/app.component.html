@@ -1,4 +1,10 @@
 <div class="bg-custom min-h-screen">
   <app-navbar class="mb-2"></app-navbar>
-  <router-outlet></router-outlet>
+  <ng-container *ngIf="appState.authState.isAuthenticated">
+    <app-sidebar></app-sidebar>
+  </ng-container>
+  <div
+    [ngClass]="{'p-10 sm:ml-64 mt-10': appState.authState.isAuthenticated, 'p-2 mt-5': !appState.authState.isAuthenticated}">
+    <router-outlet></router-outlet>
+  </div>
 </div>

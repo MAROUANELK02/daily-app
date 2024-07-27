@@ -28,9 +28,13 @@ export class NavbarComponent {
   }
 
   handleLogOut() {
-    this.authService.logout();
-    this.openDropDown();
-    this.router.navigateByUrl("/login");
+    if (window.confirm('Êtes-vous sure de vouloir se déconnecter ?')) {
+      this.authService.logout();
+      this.openDropDown();
+      this.router.navigateByUrl("/login");
+    }else{
+      this.openDropDown();
+    }
   }
 
   handleLogin() {
