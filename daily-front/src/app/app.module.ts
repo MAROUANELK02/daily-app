@@ -17,6 +17,7 @@ import { TasksHistoryComponent } from './tasks-history/tasks-history.component';
 import { AddColleagueComponent } from './add-colleague/add-colleague.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import {QuillModule} from "ngx-quill";
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import {QuillModule} from "ngx-quill";
     TasksHistoryComponent,
     AddColleagueComponent,
     ForgotPasswordComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

@@ -45,20 +45,33 @@
       <div *ngIf="openClose" class="absolute right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100
         rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
         <div class="px-4 py-3">
-          <span class="block text-sm text-gray-900 dark:text-white">
-            {{ appState.authState.username }}
-          </span>
+    <span class="block text-sm text-gray-900 dark:text-white">
+      {{ appState.authState.username }}
+    </span>
           <span class="block text-sm text-gray-500 truncate dark:text-gray-400">
-            {{ appState.authState.email }}
-          </span>
+      {{ appState.authState.email }}
+    </span>
         </div>
         <ul class="py-2" aria-labelledby="user-menu-button">
           <li>
-            <button (click)="handleLogOut()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100
-              dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Out</button>
+            <button routerLink="/profile" (click)="openDropDown()" type="button" class="flex items-center w-full px-4 py-2 text-sm font-medium text-left border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+              <svg class="w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.75 4H19M7.75 4a2.25 2.25 0 0 1-4.5 0m4.5 0a2.25 2.25 0 0 0-4.5 0M1 4h2.25m13.5 6H19m-2.25 0a2.25 2.25 0 0 1-4.5 0m4.5 0a2.25 2.25 0 0 0-4.5 0M1 10h11.25m-4.5 6H19M7.75 16a2.25 2.25 0 0 1-4.5 0m4.5 0a2.25 2.25 0 0 0-4.5 0M1 16h2.25"/>
+              </svg>
+              Settings
+            </button>
+          </li>
+          <li>
+            <button (click)="handleLogOut()" class="flex items-center w-full px-4 py-2 text-sm font-medium text-left border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+              <svg class="w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6M12 9l3 3-3 3M16 3H6a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2z" />
+              </svg>
+              Sign Out
+            </button>
           </li>
         </ul>
       </div>
+
     </li>
     <li *ngIf="!appState.authState.isAuthenticated">
       <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse mr-3">
