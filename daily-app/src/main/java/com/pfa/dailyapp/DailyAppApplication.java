@@ -41,6 +41,7 @@ public class DailyAppApplication {
                     .username("mehdichef")
                     .password(passwordEncoder.encode("Pass@word1"))
                     .jobTitle("Chef projet")
+                    .tasksCount(1)
                     .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_ADMIN),
                             roleRepository.findByRoleName(ERole.ROLE_USER)))
                     .createdAt(LocalDateTime.now())
@@ -54,6 +55,7 @@ public class DailyAppApplication {
                     .username("sarasales")
                     .password(passwordEncoder.encode("Pass@word1"))
                     .jobTitle("Sales manager")
+                    .tasksCount(1)
                     .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_USER)))
                     .createdAt(LocalDateTime.now())
                     .updatedAt(LocalDateTime.now())
@@ -66,6 +68,7 @@ public class DailyAppApplication {
                     .username("nassimghelab")
                     .password(passwordEncoder.encode("Pass@word1"))
                     .jobTitle("Software engineer")
+                    .tasksCount(1)
                     .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_USER)))
                     .createdAt(LocalDateTime.now())
                     .updatedAt(LocalDateTime.now())

@@ -1,5 +1,6 @@
 package com.pfa.dailyapp.web;
 
+import com.pfa.dailyapp.dtos.ErrorResponse;
 import com.pfa.dailyapp.dtos.TaskDTORequest;
 import com.pfa.dailyapp.dtos.TaskDTOResponse;
 import com.pfa.dailyapp.dtos.UserDTOResponse;
@@ -40,6 +41,13 @@ public class UserController {
                                                        @RequestParam(name = "page", defaultValue = "0") int page,
                                                        @RequestParam(name = "size", defaultValue = "10") int size) {
         Page<TaskDTOResponse> tasks = taskService.getTasksByUserId(userId, TaskStatus.DONE, page, size);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/tasksHistory")
+    public ResponseEntity<?> getTasksHistory(@RequestParam(name = "page", defaultValue = "0") int page,
+                                            @RequestParam(name = "size", defaultValue = "10") int size) {
+        Page<TaskDTOResponse> tasks = taskService.getTasksHistory(page, size);
         return ResponseEntity.ok(tasks);
     }
 
@@ -124,13 +132,14 @@ public class UserController {
         }
     }
 
-    @PutMapping("/task/update")
-    public ResponseEntity<?> updateTask(@RequestBody TaskDTOResponse taskDTOResponse) {
+    @PutMapping("/task/update/{taskId}")
+    public ResponseEntity<?> updateTask(@PathVariable(name = "taskId") Long taskId,
+                                        @RequestBody TaskDTORequest taskDTORequest) {
         try {
-            TaskDTOResponse updatedTask = taskService.updateTask(taskDTOResponse);
+            TaskDTOResponse updatedTask = taskService.updateTask(taskDTORequest, taskId);
             return ResponseEntity.ok(updatedTask);
         } catch (TaskNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 

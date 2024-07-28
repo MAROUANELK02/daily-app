@@ -192,16 +192,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void incrementTasksCount(Long userId) throws UserNotFoundException {
-        UserDTOResponse userById = getUserById(userId);
-        userById.setTasksCount(userById.getTasksCount() + 1);
-        userRepository.save(userMapper.toUser(userById));
+        log.info("incrémentation du nombre de tâches pour l'utilisateur avec l'id: {}", userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        user.setTasksCount(user.getTasksCount() + 1);
+        userRepository.save(user);
+        log.info("Nombre de tâches incrémenté avec succès");
     }
 
     @Override
     public void decrementTasksCount(Long userId) throws UserNotFoundException {
-        UserDTOResponse userById = getUserById(userId);
-        userById.setTasksCount(userById.getTasksCount() - 1);
-        userRepository.save(userMapper.toUser(userById));
+        log.info("Décrémentation du nombre de tâches pour l'utilisateur avec l'id: {}", userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        user.setTasksCount(user.getTasksCount() - 1);
+        userRepository.save(user);
+        log.info("Nombre de tâches décrémenté avec succès");
     }
 
     @Override

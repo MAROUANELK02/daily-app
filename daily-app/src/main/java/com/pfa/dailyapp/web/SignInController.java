@@ -33,7 +33,6 @@ public class SignInController {
     private UserService userService;
     private EmailSenderService emailService;
 
-
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -63,7 +62,6 @@ public class SignInController {
                 userDetails.getEmail(),
                 roles));
     }
-
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam(name = "email") String email) {

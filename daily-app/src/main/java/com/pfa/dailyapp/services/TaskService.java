@@ -11,8 +11,9 @@ import org.springframework.data.domain.Page;
 public interface TaskService {
     Page<TaskDTOResponse> getTasksByUserId(Long userId, TaskStatus status, int page, int size);
     TaskDTOResponse getTaskById(Long id) throws TaskNotFoundException;
+    Page<TaskDTOResponse> getTasksHistory(int page, int size);
     TaskDTOResponse saveTask(TaskDTORequest task, Long userId);
-    TaskDTOResponse updateTask(TaskDTOResponse task) throws TaskNotFoundException;
+    TaskDTOResponse updateTask(TaskDTORequest task, Long taskId) throws TaskNotFoundException;
     TaskDTOResponse changeTaskStatus(TaskStatus status, Long id) throws TaskNotFoundException, UserNotFoundException;
     TaskDTOResponse changeTaskPriority(TaskPriority priority, Long id) throws TaskNotFoundException;
     void deleteTask(Long id) throws TaskNotFoundException, UserNotFoundException;

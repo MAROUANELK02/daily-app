@@ -13,7 +13,9 @@ import com.pfa.dailyapp.repositories.TaskRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -43,6 +45,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Page<TaskDTOResponse> getTasksHistory(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"createdAt"));
+        Page<Task> tasks = taskRepository.findAllByStatus(TaskStatus.DONE, pageable);
+        return tasks.map(taskMapper::toTaskDTO);
+    }
+
+    @Override
     public TaskDTOResponse saveTask(TaskDTORequest task, Long userId) {
         log.info("Saving task: {}", task);
         Task task1 = taskMapper.toTask(task);
@@ -65,9 +74,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTOResponse updateTask(TaskDTOResponse task) throws TaskNotFoundException {
+    public TaskDTOResponse updateTask(TaskDTORequest task, Long taskId) throws TaskNotFoundException {
         log.info("Updating task: {}", task);
-        Task task1 = taskRepository.findById(task.getTaskId()).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        Task task1 = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Task not found"));
         if (!task1.getTitle().equals(task.getTitle()))
             task1.setTitle(task.getTitle());
         if (!task1.getDescription().equals(task.getDescription()))
