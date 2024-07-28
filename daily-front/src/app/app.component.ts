@@ -8,5 +8,13 @@ import {AppStateService} from "./services/app-state.service";
 })
 export class AppComponent {
   constructor(public appState : AppStateService) {
+    this.loadAuthState()
+  }
+
+  private loadAuthState() {
+    const authState = localStorage.getItem('authState');
+    if (authState) {
+      this.appState.setAuthState(JSON.parse(authState));
+    }
   }
 }

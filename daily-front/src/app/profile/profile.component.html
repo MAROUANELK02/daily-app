@@ -5,7 +5,8 @@
     <div class="space-y-4">
       <div class="flex flex-col items-center space-y-2">
         <img [src]="this.appState.authState.imageUri" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
-        <button class="px-4 py-2 bg-blue-500 text-white rounded-md">Changer l'image</button>
+        <input type="file" (change)="onFileSelected($event)" #fileInput hidden>
+        <button (click)="fileInput.click()" class="px-4 py-2 bg-blue-500 text-white rounded-md">Changer l'image</button>
       </div>
     </div>
 

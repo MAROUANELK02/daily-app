@@ -66,4 +66,28 @@ export class ColleaguesRepositoryService implements OnInit{
     });
   }
 
+  postImage(userId: number, formData: FormData): Observable<any> {
+    return this.http.post(this.host + `/image/${userId}`, formData).pipe(
+      tap((response: any) => {
+        this.appState.setAuthState({ imageUri: response.image });
+      }),
+      catchError((error) => {
+        console.error('Error uploading image:', error);
+        return of(null);
+      })
+    );
+  }
+
+  putImage(userId: number, formData: FormData): Observable<any> {
+    return this.http.put(this.host + `/image/${userId}`, formData).pipe(
+      tap((response: any) => {
+        this.appState.setAuthState({ imageUri: response.image });
+      }),
+      catchError((error) => {
+        console.error('Error uploading image:', error);
+        return of(null);
+      })
+    );
+  }
+
 }
