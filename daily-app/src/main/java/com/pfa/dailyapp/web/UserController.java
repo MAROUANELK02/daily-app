@@ -185,4 +185,14 @@ public class UserController {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
+
+    @DeleteMapping("/image/{userId}")
+    public ResponseEntity<?> deleteImage(@PathVariable("userId") Long userId) {
+        try {
+            userService.deleteImage(userId);
+            return ResponseEntity.ok(new SuccessResponse("Image deleted successfully"));
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
 }

@@ -3,8 +3,15 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <!-- Profile Picture Section -->
     <div class="space-y-4">
-      <div class="flex flex-col items-center space-y-2">
-        <img [src]="this.appState.authState.imageUri" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
+      <div class="flex flex-col items-center space-y-2 relative">
+        <div class="relative">
+          <img [src]="this.appState.authState.imageUri" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
+          <div class="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 bg-white rounded-full p-1">
+            <svg (click)="onDeleteImage()" class="w-6 h-6 text-red-500 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </div>
+        </div>
         <input type="file" (change)="onFileSelected($event)" #fileInput hidden>
         <button (click)="fileInput.click()" class="px-4 py-2 bg-blue-500 text-white rounded-md">Changer l'image</button>
       </div>

@@ -15,6 +15,7 @@ public interface UserService {
     void deleteUser(Long id) throws UserNotFoundException;
     UserDTOResponse addImage(Long userId, MultipartFile image) throws UserNotFoundException;
     UserDTOResponse updateImage(Long userId, MultipartFile file) throws UserNotFoundException;
+    void deleteImage(Long userId) throws UserNotFoundException;
     byte[] getImage(Long userId) throws UserNotFoundException;
     void incrementTasksCount(Long userId) throws UserNotFoundException;
     void decrementTasksCount(Long userId) throws UserNotFoundException;

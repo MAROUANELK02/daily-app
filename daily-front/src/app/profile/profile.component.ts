@@ -11,15 +11,16 @@ import {catchError, map, Observable, of} from "rxjs";
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
-export class ProfileComponent implements OnInit{
+export class ProfileComponent implements OnInit {
   user !: User;
   form !: FormGroup;
-  private host : string = "http://localhost:5000/api/users";
+  private host: string = "http://localhost:5000/api/users";
 
   constructor(public appState: AppStateService,
               private http: HttpClient,
               public fb: FormBuilder,
-              private userService : ColleaguesRepositoryService) { }
+              private userService: ColleaguesRepositoryService) {
+  }
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -36,8 +37,8 @@ export class ProfileComponent implements OnInit{
   }
 
   changePassword() {
-    if(window.confirm("Are you sure you want to change your password?")) {
-      this.userService.changePassword(this.appState.authState.id,this.form.value.password,
+    if (window.confirm("Are you sure you want to change your password?")) {
+      this.userService.changePassword(this.appState.authState.id, this.form.value.password,
         this.form.value.newPassword, this.form.value.confirmedPassword).subscribe({
         next: (data) => {
           window.alert(data.message);
@@ -51,7 +52,7 @@ export class ProfileComponent implements OnInit{
   }
 
   private getUserImageById(userId: number): Observable<string> {
-    return this.http.get(this.host + `/image/${userId}`, { responseType: 'blob' }).pipe(
+    return this.http.get(this.host + `/image/${userId}`, {responseType: 'blob'}).pipe(
       map((imageBlob: Blob) => {
         return window.URL.createObjectURL(imageBlob);
       }),
@@ -107,4 +108,34 @@ export class ProfileComponent implements OnInit{
     }
   }
 
+  onDeleteImage() {
+    if (window.confirm("Êtes vous sûr de vouloir supprimer votre photo de profil ?")) {
+      this.userService.deleteImage(this.appState.authState.id).subscribe({
+        next: () => {
+          const userId = this.appState.authState.id;
+          this.getUserImageById(userId).subscribe({
+            next: (imageUri: string) => {
+              const authState = {
+                isAuthenticated: this.appState.authState.isAuthenticated,
+                username: this.appState.authState.username,
+                id: this.appState.authState.id,
+                email: this.appState.authState.email,
+                roles: this.appState.authState.roles,
+                token: this.appState.authState.token
+              };
+              const updatedAuthState = {
+                ...authState,
+                imageUri: imageUri
+              };
+              this.appState.setAuthState(updatedAuthState);
+              localStorage.setItem('authState', JSON.stringify(updatedAuthState));
+            },
+            error: (error) => {
+              console.error('Error getting image:', error);
+            }
+          });
+        }
+      });
+    }
+  }
 }

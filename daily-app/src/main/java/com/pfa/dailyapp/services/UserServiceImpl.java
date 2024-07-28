@@ -172,6 +172,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteImage(Long userId) throws UserNotFoundException {
+        log.info("Deleting image for user with id: {}", userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (user.getImage() != null) {
+            Path existingImagePath = Paths.get(user.getImage());
+            try {
+                Files.deleteIfExists(existingImagePath);
+                log.info("Image deleted successfully");
+            } catch (IOException e) {
+                log.info("Could not delete existing image");
+                throw new RuntimeException("Could not delete existing image", e);
+            }
+
+            user.setImage("");
+            user.setUpdatedAt(LocalDateTime.now());
+            userRepository.save(user);
+        } else {
+            log.info("No image to delete for user with id: {}", userId);
+        }
+    }
+
+    @Override
     public byte[] getImage(Long userId) throws UserNotFoundException {
         log.info("Getting image for user with id: {}", userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
