@@ -21,4 +21,5 @@ public interface UserService {
     Boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     void resetPassword(String email, String confirmedPassword) throws UserNotFoundException;
+    void changePassword(Long userId, String oldPassword, String newPassword) throws UserNotFoundException;
 }

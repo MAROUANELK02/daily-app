@@ -1,9 +1,6 @@
 package com.pfa.dailyapp.web;
 
-import com.pfa.dailyapp.dtos.ErrorResponse;
-import com.pfa.dailyapp.dtos.TaskDTORequest;
-import com.pfa.dailyapp.dtos.TaskDTOResponse;
-import com.pfa.dailyapp.dtos.UserDTOResponse;
+import com.pfa.dailyapp.dtos.*;
 import com.pfa.dailyapp.enums.TaskPriority;
 import com.pfa.dailyapp.enums.TaskStatus;
 import com.pfa.dailyapp.exceptions.TaskNotFoundException;
@@ -12,7 +9,6 @@ import com.pfa.dailyapp.services.TaskService;
 import com.pfa.dailyapp.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,7 +53,7 @@ public class UserController {
             UserDTOResponse userDTOResponse = userService.getUserById(userId);
             return ResponseEntity.ok(userDTOResponse);
         } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -79,7 +75,7 @@ public class UserController {
             TaskDTOResponse taskDTOResponse = taskService.getTaskById(taskId);
             return ResponseEntity.ok(taskDTOResponse);
         } catch (TaskNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -89,7 +85,7 @@ public class UserController {
             byte[] imageBytes = userService.getImage(userId);
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
         } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -107,7 +103,7 @@ public class UserController {
             UserDTOResponse updatedUser = userService.addImage(userId, image);
             return ResponseEntity.ok(updatedUser);
         } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -118,7 +114,7 @@ public class UserController {
             UserDTOResponse updatedUser = userService.updateImage(userId, image);
             return ResponseEntity.ok(updatedUser);
         } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -128,7 +124,7 @@ public class UserController {
             UserDTOResponse updatedUser = userService.updateUser(userDTOResponse);
             return ResponseEntity.ok(updatedUser);
         } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -150,7 +146,7 @@ public class UserController {
             TaskDTOResponse updatedTask = taskService.changeTaskStatus(status, taskId);
             return ResponseEntity.ok(updatedTask);
         } catch (TaskNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -161,7 +157,22 @@ public class UserController {
             TaskDTOResponse updatedTask = taskService.changeTaskPriority(priority, taskId);
             return ResponseEntity.ok(updatedTask);
         } catch (TaskNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
+
+    @PatchMapping("/{userId}/changePassword")
+    public ResponseEntity<?> changePassword(@PathVariable("userId") Long userId,
+                                            @RequestBody ChangePasswordDTO changePasswordDTO) {
+        try {
+            if(changePasswordDTO.newPassword().equals(changePasswordDTO.confirmedPassword())) {
+                userService.changePassword(userId, changePasswordDTO.oldPassword(), changePasswordDTO.confirmedPassword());
+                return ResponseEntity.ok(new SuccessResponse("Password changed successfully"));
+            } else {
+                return ResponseEntity.badRequest().body(new ErrorResponse("Passwords don't match"));
+            }
+        } catch (UserNotFoundException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -169,10 +180,9 @@ public class UserController {
     public ResponseEntity<?> deleteTask(@PathVariable("taskId") Long taskId) {
         try {
             taskService.deleteTask(taskId);
+            return ResponseEntity.ok(new SuccessResponse("Task deleted successfully"));
         } catch (TaskNotFoundException | UserNotFoundException e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
-        return ResponseEntity.ok("Task deleted successfully");
     }
-
 }

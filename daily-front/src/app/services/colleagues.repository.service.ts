@@ -54,4 +54,16 @@ export class ColleaguesRepositoryService implements OnInit{
     this.getColleagues({});
   }
 
+  getUserById(userId: number): Observable<User> {
+    return this.http.get<User>(this.host + `/${userId}`);
+  }
+
+  changePassword(userId: number, oldPassword: string, newPassword: string, confirmedPassword: string): Observable<any> {
+    return this.http.patch(this.host + `/${userId}/changePassword`, {
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+      confirmedPassword: confirmedPassword
+    });
+  }
+
 }

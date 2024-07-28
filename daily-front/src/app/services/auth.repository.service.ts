@@ -67,4 +67,5 @@ export class AuthRepositoryService {
       this.appState.setAuthState(JSON.parse(authState));
     }
   }
+
 }

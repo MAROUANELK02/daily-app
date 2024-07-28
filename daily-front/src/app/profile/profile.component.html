@@ -1,1 +1,67 @@
-<p>profile works!</p>
+<div class="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-md space-y-4">
+  <h1 class="text-2xl font-semibold">Profile</h1>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Profile Picture Section -->
+    <div class="space-y-4">
+      <div class="flex flex-col items-center space-y-2">
+        <img [src]="this.appState.authState.imageUri" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover">
+        <button class="px-4 py-2 bg-blue-500 text-white rounded-md">Changer l'image</button>
+      </div>
+    </div>
+
+    <!-- General Information Section -->
+    <div class="md:col-span-2 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="firstName" class="block text-sm font-medium text-gray-700">Prénom</label>
+          <input type="text" id="firstName" name="firstName" class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" [value]="user.firstname" readonly>
+        </div>
+        <div>
+          <label for="lastName" class="block text-sm font-medium text-gray-700">Nom</label>
+          <input type="text" id="lastName" name="lastName" class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" [value]="user.lastname" readonly>
+        </div>
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input type="email" id="email" name="country" class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" [value]="user.email" readonly>
+        </div>
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+          <input type="text" id="username" name="city" class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" [value]="user.username" readonly>
+        </div>
+        <div>
+          <label for="role" class="block text-sm font-medium text-gray-700">Rôle</label>
+          <input type="text" id="role" name="address" class="mt-1 block w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" [value]="user.jobTitle" readonly>
+        </div>
+      </div>
+    </div>
+    </div>
+      <div class="max-w-2xl mx-auto p-6 bg-white shadow rounded-lg mt-5">
+        <h2 class="text-xl font-semibold mb-4">Changer le mot de passe</h2>
+        <form [formGroup]="form" (ngSubmit)="changePassword()">
+          <div class="mb-4">
+            <label for="current-password" class="block text-sm font-medium text-gray-700">Mot de passe actuel</label>
+            <input type="password" formControlName="password" id="current-password" class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="********">
+          </div>
+          <div class="mb-4">
+            <label for="new-password" class="block text-sm font-medium text-gray-700">Nouveau mot de passe</label>
+            <input type="password" id="new-password" formControlName="newPassword" class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="********">
+          </div>
+          <div class="mb-4">
+            <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm password</label>
+            <input type="password" id="confirm-password" formControlName="confirmedPassword" class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="********">
+          </div>
+          <div class="mb-4">
+            <h3 class="text-sm font-semibold text-gray-700 mb-2">Exigences relatives au mot de passe :</h3>
+            <ul class="text-sm text-gray-600">
+              <li>Au moins 8 caractères</li>
+              <li>Au moins un caractère minuscule</li>
+              <li>Inclusion d'au moins un caractère spécial</li>
+              <li>Au moins un caractère majuscule</li>
+            </ul>
+          </div>
+          <div class="mt-6">
+            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sauvegarder</button>
+          </div>
+        </form>
+      </div>
+  </div>
