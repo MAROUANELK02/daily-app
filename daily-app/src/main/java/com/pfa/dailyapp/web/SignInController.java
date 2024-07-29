@@ -85,7 +85,7 @@ public class SignInController {
             try {
                 userService.resetPassword(request.getEmail(), request.getConfirmedPassword());
                 otpService.deleteOtp(request.getEmail());
-                return ResponseEntity.ok(new SuccessResponse("Password reset successful"));
+                return ResponseEntity.ok(new SuccessResponse("Password reset successfully"));
             } catch (UserNotFoundException e) {
                 log.error(e.getMessage());
                 return ResponseEntity.badRequest().body(new ErrorResponse("User not Found !"));

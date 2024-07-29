@@ -11,66 +11,51 @@ import { Task } from "../models/task.model";
 export class TasksComponent implements OnInit {
   tasks!: Task[];
   completedTasks!: Task[];
+  openClose: boolean = false;
+  selectedTaskForDetails!: any;
 
   constructor(public appState: AppStateService,
               private taskService: TasksRepositoryService) {}
 
   ngOnInit(): void {
-    this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
-      tasks => this.tasks = this.appState.tasksState.tasks
-    );
-    this.taskService.getCompletedTasksByUserId(this.appState.authState.id, {}).subscribe(
-      tasks => this.completedTasks = this.appState.completedTasksState.tasks
-    );
+    this.fetchTasksByUserId(this.appState.authState.id);
   }
 
   prevPage() {
     if (this.appState.tasksState.currentPage > 0) {
       this.appState.tasksState.currentPage--;
-      this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
-        tasks => this.tasks = this.appState.tasksState.tasks
-      );
+      this.fetchInProgressTasksByUserId();
     }
   }
 
   goToPage(index: number) {
     this.appState.tasksState.currentPage = index;
-    this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
-      tasks => this.tasks = this.appState.tasksState.tasks
-    );
+    this.fetchInProgressTasksByUserId();
   }
 
   nextPage() {
     if (this.appState.tasksState.currentPage < this.appState.tasksState.totalPages - 1) {
       this.appState.tasksState.currentPage++;
-      this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
-        tasks => this.tasks = this.appState.tasksState.tasks
-      );
+      this.fetchInProgressTasksByUserId();
     }
   }
 
   completedPrevPage() {
     if (this.appState.completedTasksState.currentPage > 0) {
       this.appState.completedTasksState.currentPage--;
-      this.taskService.getCompletedTasksByUserId(this.appState.authState.id, {}).subscribe(
-        tasks => this.completedTasks = this.appState.completedTasksState.tasks
-      );
+      this.fetchCompletedTasksByUserId();
     }
   }
 
   completedGoToPage(index: number) {
     this.appState.completedTasksState.currentPage = index;
-    this.taskService.getCompletedTasksByUserId(this.appState.authState.id, {}).subscribe(
-      tasks => this.completedTasks = this.appState.completedTasksState.tasks
-    );
+    this.fetchCompletedTasksByUserId();
   }
 
   completedNextPage() {
     if (this.appState.completedTasksState.currentPage < this.appState.completedTasksState.totalPages - 1) {
       this.appState.completedTasksState.currentPage++;
-      this.taskService.getCompletedTasksByUserId(this.appState.authState.id, {}).subscribe(
-        tasks => this.completedTasks = this.appState.completedTasksState.tasks
-      );
+      this.fetchCompletedTasksByUserId();
     }
   }
 
@@ -83,17 +68,12 @@ export class TasksComponent implements OnInit {
       task.priority = newPriority;
       task.dropdownOpen = false;
       this.taskService.changePriority(task).subscribe({
-        next: () => {
-          this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
-            tasks => this.tasks = this.appState.tasksState.tasks
-          );
-          this.taskService.getCompletedTasksByUserId(this.appState.authState.id, {}).subscribe(
-            tasks => this.completedTasks = this.appState.completedTasksState.tasks
-          );
+        next: (data) => {
+          this.fetchTasksByUserId(this.appState.authState.id);
+          window.alert(data.message)
         },
         error: (err) => {
-          this.appState.setTasksState({ status: "ERROR", errorMessage: err.statusText });
-          window.alert("Une erreur s'est produite lors du changement de priorité.");
+          window.alert(err.error.error);
         }
       });
     }else{
@@ -105,39 +85,75 @@ export class TasksComponent implements OnInit {
     if(window.confirm("Êtes-vous sûr de vouloir compléter cette tâche ?")) {
       task.status = "DONE";
       this.taskService.changeStatus(task).subscribe({
-        next: () => {
-          this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
-            tasks => this.tasks = this.appState.tasksState.tasks
-          );
-          this.taskService.getCompletedTasksByUserId(this.appState.authState.id, {}).subscribe(
-            tasks => this.completedTasks = this.appState.completedTasksState.tasks
-          );
+        next: (data) => {
+          this.fetchTasksByUserId(this.appState.authState.id);
+          window.alert(data.message)
         },
         error: (err) => {
-          this.appState.setTasksState({ status: "ERROR", errorMessage: err.statusText });
-          window.alert("Une erreur s'est produite lors de la complétion de la tâche.");
+          window.alert(err.error.error);
         }
       });
     }
   }
 
-  reopenTask(task: Task) {
+  reactiveTask(task: Task) {
     if(window.confirm("Êtes-vous sûr de vouloir reprendre cette tâche ?")) {
       task.status = "IN_PROGRESS";
       this.taskService.changeStatus(task).subscribe({
-        next: () => {
-          this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
-            tasks => this.tasks = this.appState.tasksState.tasks
-          );
-          this.taskService.getCompletedTasksByUserId(this.appState.authState.id, {}).subscribe(
-            tasks => this.completedTasks = this.appState.completedTasksState.tasks
-          );
+        next: (data) => {
+          this.fetchTasksByUserId(this.appState.authState.id);
+          window.alert(data.message)
         },
         error: (err) => {
-          this.appState.setTasksState({ status: "ERROR", errorMessage: err.statusText });
-          window.alert("Une erreur s'est produite lors de la reprise de la tâche.");
+          window.alert(err.error.error);
         }
       });
     }
   }
+
+  deleteTask(task: Task) {
+    if(window.confirm("Êtes-vous sûr de vouloir supprimer cette tâche ?")) {
+      this.taskService.deleteTask(task).subscribe({
+        next: (data) => {
+          this.fetchTasksByUserId(this.appState.authState.id);
+          window.alert(data.message)
+        },
+        error: (err) => {
+          window.alert(err.error.error);
+        }
+      });
+    }
+  }
+
+  openDetailModal(task: Task) {
+    this.selectedTaskForDetails = task;
+    this.openClose = !this.openClose;
+  }
+
+  closeDetailModal() {
+    this.selectedTaskForDetails = null;
+    this.openClose = !this.openClose;
+  }
+
+  private fetchTasksByUserId(userId: number) {
+    this.taskService.getInProgressTasksByUserId(userId, {}).subscribe(
+      tasks => this.tasks = this.appState.tasksState.tasks
+    );
+    this.taskService.getCompletedTasksByUserId(userId, {}).subscribe(
+      tasks => this.completedTasks = this.appState.completedTasksState.tasks
+    );
+  }
+
+  private fetchCompletedTasksByUserId() {
+    this.taskService.getCompletedTasksByUserId(this.appState.authState.id, {}).subscribe(
+      tasks => this.completedTasks = this.appState.completedTasksState.tasks
+    );
+  }
+
+  private fetchInProgressTasksByUserId() {
+    this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
+      tasks => this.tasks = this.appState.tasksState.tasks
+    );
+  }
+
 }

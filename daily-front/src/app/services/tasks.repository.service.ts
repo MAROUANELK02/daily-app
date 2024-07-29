@@ -93,4 +93,32 @@ export class TasksRepositoryService {
       }
     });
   }
+
+  getTasksHistory({
+    currentPage = this.appState.tasksHistoryState.currentPage,
+    size = this.appState.tasksHistoryState.pageSize
+                  }) : Observable<any> {
+    this.appState.tasksHistoryState.status = "LOADING";
+    return this.http.get<ApiResponse<Task>>(this.host + "/tasksHistory", {
+      params: {
+        page: currentPage,
+        size: size
+      }
+    }).pipe(
+      tap({
+        next: (data: ApiResponse<Task>) => {
+          let tasks = data.content;
+          let totalPages = data.totalPages;
+          this.appState.setTasksHistoryState({ tasks, totalPages, currentPage, status: "LOADED", errorMessage: "" });
+        },
+        error: (err) => {
+          this.appState.setTasksHistoryState({ status: "ERROR", errorMessage: err.statusText });
+        }
+      })
+    );
+  }
+
+  deleteTask(task: Task) :Observable<any>{
+    return this.http.delete(`${this.host}/task/${task.taskId}`);
+  }
 }

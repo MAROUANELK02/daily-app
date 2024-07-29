@@ -13,7 +13,6 @@ public class UserDTOResponse {
     private String email;
     private String username;
     private String jobTitle;
-    private String image;
     private int tasksCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

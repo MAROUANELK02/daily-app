@@ -15,14 +15,14 @@ public class TaskMapper {
     public TaskDTOResponse toTaskDTO(Task task) {
         TaskDTOResponse taskDTOResponse = new TaskDTOResponse();
         BeanUtils.copyProperties(task, taskDTOResponse);
-        taskDTOResponse.setUserDTOResponse(userMapper.toUserDTO(task.getUser()));
+        taskDTOResponse.setUserDTO(userMapper.toUserDTO(task.getUser()));
         return taskDTOResponse;
     }
 
     public Task toTask(TaskDTOResponse taskDTOResponse) {
         Task task = new Task();
         BeanUtils.copyProperties(taskDTOResponse, task);
-        task.setUser(userMapper.toUser(taskDTOResponse.getUserDTOResponse()));
+        task.setUser(userMapper.toUser(taskDTOResponse.getUserDTO()));
         return task;
     }
 

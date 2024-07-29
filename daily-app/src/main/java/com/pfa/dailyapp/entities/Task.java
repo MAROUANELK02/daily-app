@@ -26,7 +26,7 @@ public class Task {
     private String title;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     @Enumerated(EnumType.STRING)

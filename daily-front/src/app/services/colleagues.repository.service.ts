@@ -13,6 +13,10 @@ export class ColleaguesRepositoryService implements OnInit{
 
   constructor(private http : HttpClient, private appState : AppStateService) { }
 
+  ngOnInit(): void {
+    this.getColleagues({});
+  }
+
   getColleagues({keyword = this.appState.usersState.keyword,
                   currentPage = this.appState.usersState.currentPage,
                   size = this.appState.usersState.pageSize}): Observable<ApiResponse<User>> {
@@ -41,17 +45,12 @@ export class ColleaguesRepositoryService implements OnInit{
   getUserImageById(userId: number): Observable<string> {
     return this.http.get(this.host + `/image/${userId}`, { responseType: 'blob' }).pipe(
       map((imageBlob: Blob) => {
-        const url = window.URL.createObjectURL(imageBlob);
-        return url;
+        return window.URL.createObjectURL(imageBlob);
       }),
       catchError(() => {
         return of('/profile.jpg');
       })
     );
-  }
-
-  ngOnInit(): void {
-    this.getColleagues({});
   }
 
   getUserById(userId: number): Observable<User> {
@@ -77,5 +76,6 @@ export class ColleaguesRepositoryService implements OnInit{
   deleteImage(userId: number): Observable<any> {
     return this.http.delete(this.host + `/image/${userId}`);
   }
+
 
 }

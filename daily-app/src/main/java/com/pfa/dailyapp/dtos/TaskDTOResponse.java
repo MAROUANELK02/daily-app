@@ -15,5 +15,5 @@ public class TaskDTOResponse {
     private TaskPriority priority;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private UserDTOResponse userDTOResponse;
+    private UserDTOResponse userDTO;
 }

@@ -46,7 +46,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Page<TaskDTOResponse> getTasksHistory(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"createdAt"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"updatedAt"));
         Page<Task> tasks = taskRepository.findAllByStatus(TaskStatus.DONE, pageable);
         return tasks.map(taskMapper::toTaskDTO);
     }
@@ -116,9 +116,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long id) throws TaskNotFoundException, UserNotFoundException {
         log.info("Deleting task with id: {}", id);
-        Long userId = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found")).getUser().getUserId();
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        Long userId = task.getUser().getUserId();
         taskRepository.deleteById(id);
-        userService.decrementTasksCount(userId);
+        if(task.getStatus().equals(TaskStatus.IN_PROGRESS))
+            userService.decrementTasksCount(userId);
         log.info("Task deleted successfully");
     }
 }

@@ -92,16 +92,16 @@ public class UserController {
     @PostMapping("/task/{userId}")
     public ResponseEntity<?> saveTask(@PathVariable Long userId,
             @RequestBody TaskDTORequest taskDTORequest) {
-        TaskDTOResponse savedTask = taskService.saveTask(taskDTORequest, userId);
-        return ResponseEntity.ok(savedTask);
+        taskService.saveTask(taskDTORequest, userId);
+        return ResponseEntity.ok(new SuccessResponse("Task added successfully"));
     }
 
     @PostMapping("/image/{userId}")
     public ResponseEntity<?> addImage(@PathVariable("userId") Long userId,
                                       @RequestBody MultipartFile image) {
         try {
-            UserDTOResponse updatedUser = userService.addImage(userId, image);
-            return ResponseEntity.ok(updatedUser);
+            userService.addImage(userId, image);
+            return ResponseEntity.ok(new SuccessResponse("Image added successfully"));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -111,8 +111,8 @@ public class UserController {
     public ResponseEntity<?> updateImage(@PathVariable("userId") Long userId,
                                          @RequestBody MultipartFile image) {
         try {
-            UserDTOResponse updatedUser = userService.updateImage(userId, image);
-            return ResponseEntity.ok(updatedUser);
+            userService.updateImage(userId, image);
+            return ResponseEntity.ok(new SuccessResponse("Image updated successfully"));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -121,8 +121,8 @@ public class UserController {
     @PutMapping("/user/update")
     public ResponseEntity<?> updateUser(@RequestBody UserDTOResponse userDTOResponse) {
         try {
-            UserDTOResponse updatedUser = userService.updateUser(userDTOResponse);
-            return ResponseEntity.ok(updatedUser);
+            userService.updateUser(userDTOResponse);
+            return ResponseEntity.ok(new SuccessResponse("User updated successfully"));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -132,8 +132,8 @@ public class UserController {
     public ResponseEntity<?> updateTask(@PathVariable(name = "taskId") Long taskId,
                                         @RequestBody TaskDTORequest taskDTORequest) {
         try {
-            TaskDTOResponse updatedTask = taskService.updateTask(taskDTORequest, taskId);
-            return ResponseEntity.ok(updatedTask);
+            taskService.updateTask(taskDTORequest, taskId);
+            return ResponseEntity.ok(new SuccessResponse("Task updated successfully"));
         } catch (TaskNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -143,8 +143,8 @@ public class UserController {
     public ResponseEntity<?> changeTaskStatus(@PathVariable("taskId") Long taskId,
                                               @RequestParam("status") TaskStatus status) {
         try {
-            TaskDTOResponse updatedTask = taskService.changeTaskStatus(status, taskId);
-            return ResponseEntity.ok(updatedTask);
+            taskService.changeTaskStatus(status, taskId);
+            return ResponseEntity.ok(new SuccessResponse("Task status changed successfully"));
         } catch (TaskNotFoundException | UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -154,8 +154,8 @@ public class UserController {
     public ResponseEntity<?> changeTaskPriority(@PathVariable("taskId") Long taskId,
                                                 @RequestParam("priority") TaskPriority priority) {
         try {
-            TaskDTOResponse updatedTask = taskService.changeTaskPriority(priority, taskId);
-            return ResponseEntity.ok(updatedTask);
+            taskService.changeTaskPriority(priority, taskId);
+            return ResponseEntity.ok(new SuccessResponse("Task priority changed successfully"));
         } catch (TaskNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }

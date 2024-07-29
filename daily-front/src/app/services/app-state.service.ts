@@ -51,6 +51,19 @@ export class AppStateService {
     errorMessage :""
   }
 
+  public tasksHistoryState: any={
+    tasks:[],
+    totalPages:0,
+    currentPage : 0,
+    pageSize: 3,
+    status :"",
+    errorMessage :""
+  }
+
+  setTasksHistoryState(state: any) {
+    this.tasksHistoryState = { ...this.tasksHistoryState, ...state };
+  }
+
   public setAuthState(state:any){
     this.authState={...this.authState, ...state};
   }
