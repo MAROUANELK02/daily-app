@@ -43,5 +43,4 @@ public class HandleExceptions {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-
 }

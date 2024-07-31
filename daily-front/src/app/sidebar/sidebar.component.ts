@@ -20,10 +20,13 @@ export class SidebarComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    if(this.appState.authState.isAuthenticated) {
+      this.appState.getCurrentUserImage();
+    }
     this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
       tasks => this.tasks = this.appState.tasksState.tasks
     );
-    }
+  }
 
   handleLogOut() {
     if (window.confirm('Êtes-vous sure de vouloir se déconnecter ?')) {

@@ -1,4 +1,4 @@
-<nav class="fixed top-0 z-50 w-full bg-body-tertiary border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+<nav class="page-title-area fixed top-0 z-50 w-full bg-body-tertiary border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-start rtl:justify-end">
@@ -13,7 +13,6 @@
             <button type="button" (click)="openDropDown()" class="flex text-sm bg-gray-800 rounded-full md:me-0
               focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false"
               data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-              <span class="sr-only">Open user menu</span>
               <img class="w-10 h-10 rounded-full" [src]="this.appState.authState.imageUri" alt="user photo">
             </button>
 
@@ -37,7 +36,7 @@
                       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M7.75 4H19M7.75 4a2.25 2.25 0 0 1-4.5 0m4.5 0a2.25 2.25 0 0 0-4.5 0M1 4h2.25m13.5 6H19m-2.25 0a2.25 2.25 0 0 1-4.5 0m4.5 0a2.25 2.25 0 0 0-4.5 0M1 10h11.25m-4.5 6H19M7.75 16a2.25 2.25 0 0 1-4.5 0m4.5 0a2.25 2.25 0 0 0-4.5 0M1 16h2.25" />
                     </svg>
-                    Settings
+                    Paramètres
                   </button>
                 </li>
                 <li>
@@ -48,7 +47,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 12h6M12 9l3 3-3 3M16 3H6a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2z" />
                     </svg>
-                    Sign Out
+                    Se déconnecter
                   </button>
                 </li>
               </ul>
@@ -59,17 +58,7 @@
             <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse mr-3">
               <button type="button" (click)="handleLogin()"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Sign In
-              </button>
-              <button data-collapse-toggle="navbar-sticky" type="button"
-                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                aria-controls="navbar-sticky" aria-expanded="false">
-                <span class="sr-only">Login</span>
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                  viewBox="0 0 17 14">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M1 1h15M1 7h15M1 13h15" />
-                </svg>
+                Se connecter
               </button>
             </div>
           </div>

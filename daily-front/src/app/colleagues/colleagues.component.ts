@@ -31,6 +31,9 @@ export class ColleaguesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.appState.authState.isAuthenticated) {
+      this.appState.getCurrentUserImage();
+    }
     this.fetchUsersAndImages();
   }
 

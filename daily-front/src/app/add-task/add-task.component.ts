@@ -3,6 +3,7 @@ import {TasksRepositoryService} from "../services/tasks.repository.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Task} from "../models/task.model";
 import {Router} from "@angular/router";
+import {AppStateService} from "../services/app-state.service";
 
 @Component({
   selector: 'app-add-task',
@@ -24,7 +25,8 @@ export class AddTaskComponent implements OnInit{
   form!: FormGroup;
 
   constructor(private taskService : TasksRepositoryService, private fb : FormBuilder,
-              private router : Router) {
+              private router : Router,
+              private appState : AppStateService) {
   }
 
   ngOnInit(): void {
@@ -33,6 +35,9 @@ export class AddTaskComponent implements OnInit{
       description: ['', Validators.required],
       priority: ['', Validators.required]
     });
+    if(this.appState.authState.isAuthenticated) {
+      this.appState.getCurrentUserImage();
+    }
   }
 
   handleCreate() {

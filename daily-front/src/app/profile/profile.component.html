@@ -47,15 +47,15 @@
         <h2 class="text-xl font-semibold mb-4">Changer le mot de passe</h2>
         <form [formGroup]="form" (ngSubmit)="changePassword()">
           <div class="mb-4">
-            <label for="current-password" class="block text-sm font-medium text-gray-700">Mot de passe actuel</label>
+            <label for="current-password" class="block text-sm font-medium text-gray-700">Mon ancien mot de passe</label>
             <input type="password" formControlName="password" id="current-password" class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="********">
           </div>
           <div class="mb-4">
-            <label for="new-password" class="block text-sm font-medium text-gray-700">Nouveau mot de passe</label>
+            <label for="new-password" class="block text-sm font-medium text-gray-700">Mon nouveau mot de passe</label>
             <input type="password" id="new-password" formControlName="newPassword" class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="********">
           </div>
           <div class="mb-4">
-            <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm password</label>
+            <label for="confirm-password" class="block text-sm font-medium text-gray-700">Je confirme mon nouveau mot de passe</label>
             <input type="password" id="confirm-password" formControlName="confirmedPassword" class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="********">
           </div>
           <div class="mb-4">
@@ -63,8 +63,8 @@
             <ul class="text-sm text-gray-600">
               <li>Au moins 8 caractères</li>
               <li>Au moins un caractère minuscule</li>
-              <li>Inclusion d'au moins un caractère spécial</li>
               <li>Au moins un caractère majuscule</li>
+              <li>Inclusion d'au moins un caractère spécial</li>
             </ul>
           </div>
           <div class="mt-6">

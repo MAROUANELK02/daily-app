@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import { AppStateService } from "../services/app-state.service";
 import { Router } from "@angular/router";
 import { AuthRepositoryService } from "../services/auth.repository.service";
@@ -8,7 +8,7 @@ import { AuthRepositoryService } from "../services/auth.repository.service";
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit{
   openClose: boolean = false;
 
   constructor(
@@ -17,6 +17,12 @@ export class NavbarComponent {
     private authService: AuthRepositoryService,
     private elRef: ElementRef
   ) { }
+
+  ngOnInit(): void {
+    if(this.appState.authState.isAuthenticated) {
+      this.appState.getCurrentUserImage();
+    }
+  }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {User} from "../models/user.model";
 import {AdminRepositoryService} from "../services/admin.repository.service";
+import {AppStateService} from "../services/app-state.service";
 
 @Component({
   selector: 'app-add-colleague',
@@ -12,6 +13,7 @@ export class AddColleagueComponent implements OnInit{
   form!: FormGroup;
 
   constructor(private adminService : AdminRepositoryService,
+              private appState : AppStateService,
               private fb : FormBuilder) { }
 
   ngOnInit(): void {
@@ -23,7 +25,10 @@ export class AddColleagueComponent implements OnInit{
       password: ['', Validators.required],
       confirmedPassword: ['', Validators.required],
       jobTitle: ['', Validators.required]
-    })
+    });
+    if(this.appState.authState.isAuthenticated) {
+      this.appState.getCurrentUserImage();
+    }
   };
 
   handleCreate() {

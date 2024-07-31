@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {catchError, map, Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppStateService {
+
+  constructor(private http : HttpClient) {
+  }
 
   public authState:any={
     isAuthenticated :false,
@@ -15,6 +20,32 @@ export class AppStateService {
     token :"",
     status :"",
     errorMessage :"",
+  }
+
+  private getImageUri(): Observable<string> {
+    return this.http.get(`http://localhost:5000/api/users/image/${this.authState.id}`,
+      { responseType: 'blob' }).pipe(
+      map((imageBlob: Blob) => {
+        return window.URL.createObjectURL(imageBlob);
+      }),
+      catchError(() => {
+        return of('/profile.jpg');
+      })
+    );
+  }
+
+  public getCurrentUserImage() : void {
+    this.getImageUri().subscribe(
+      (imageUri) => {
+        const updatedAuthState = {
+          ...this.authState,
+          imageUri: imageUri
+        };
+        this.setAuthState(updatedAuthState);
+        localStorage.removeItem('authState');
+        localStorage.setItem('authState', JSON.stringify(updatedAuthState));
+      }
+    )
   }
 
   public usersState :any={
@@ -55,7 +86,8 @@ export class AppStateService {
     tasks:[],
     totalPages:0,
     currentPage : 0,
-    pageSize: 3,
+    keyword:"",
+    pageSize: 6,
     status :"",
     errorMessage :""
   }

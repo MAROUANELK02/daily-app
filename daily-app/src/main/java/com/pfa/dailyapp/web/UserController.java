@@ -42,8 +42,9 @@ public class UserController {
 
     @GetMapping("/tasksHistory")
     public ResponseEntity<?> getTasksHistory(@RequestParam(name = "page", defaultValue = "0") int page,
-                                            @RequestParam(name = "size", defaultValue = "10") int size) {
-        Page<TaskDTOResponse> tasks = taskService.getTasksHistory(page, size);
+                                            @RequestParam(name = "size", defaultValue = "10") int size,
+                                             @RequestParam(name = "keyword", defaultValue = "") String keyword) {
+        Page<TaskDTOResponse> tasks = taskService.getTasksHistory(page, size, keyword);
         return ResponseEntity.ok(tasks);
     }
 

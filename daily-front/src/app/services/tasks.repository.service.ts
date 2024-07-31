@@ -96,13 +96,15 @@ export class TasksRepositoryService {
 
   getTasksHistory({
     currentPage = this.appState.tasksHistoryState.currentPage,
-    size = this.appState.tasksHistoryState.pageSize
+    size = this.appState.tasksHistoryState.pageSize,
+    keyword = this.appState.tasksHistoryState.keyword,
                   }) : Observable<any> {
     this.appState.tasksHistoryState.status = "LOADING";
     return this.http.get<ApiResponse<Task>>(this.host + "/tasksHistory", {
       params: {
         page: currentPage,
-        size: size
+        size: size,
+        keyword: keyword
       }
     }).pipe(
       tap({

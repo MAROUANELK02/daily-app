@@ -45,9 +45,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Page<TaskDTOResponse> getTasksHistory(int page, int size) {
+    public Page<TaskDTOResponse> getTasksHistory(int page, int size, String keyword) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"updatedAt"));
-        Page<Task> tasks = taskRepository.findAllByStatus(TaskStatus.DONE, pageable);
+        Page<Task> tasks = taskRepository.findAllByStatusAndUserKeyword(TaskStatus.DONE, keyword, pageable);
         return tasks.map(taskMapper::toTaskDTO);
     }
 

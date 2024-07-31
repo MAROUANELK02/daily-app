@@ -50,19 +50,6 @@ export class ForgotPasswordComponent implements OnInit{
       this.form.value.password,
       this.form.value.confirmedPassword,
       this.form.value.code
-    ).subscribe(
-      (response: any) => {
-        if (this.appState.changePasswordState.status === 'success') {
-          window.alert("Password reset successfully");
-          this.router.navigate(['/login']);
-        } else {
-          window.alert(`Error: ${this.appState.changePasswordState.errorMessage}`);
-        }
-      },
-      (error: any) => {
-        const errorMessage = error.error?.error || 'An error occurred';
-        window.alert(`Error: ${errorMessage}`);
-      }
     );
   }
 

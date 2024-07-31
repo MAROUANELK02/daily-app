@@ -15,8 +15,12 @@ export class TasksHistoryComponent implements OnInit{
   openClose: boolean = false;
   userImageUrls: { [userId: number]: string } = {};
   selectedTaskForDetails!: any;
+  searchQuery: string = '';
 
   ngOnInit() {
+    if(this.appState.authState.isAuthenticated) {
+      this.appState.getCurrentUserImage();
+    }
     this.fetchTasksUsersAndImages();
   }
 
@@ -73,4 +77,9 @@ export class TasksHistoryComponent implements OnInit{
     this.openClose = !this.openClose;
   }
 
+  initiateSearch() {
+    this.appState.tasksHistoryState.currentPage = 0;
+    this.appState.tasksHistoryState.keyword = this.searchQuery;
+    this.fetchTasksUsersAndImages();
+  }
 }

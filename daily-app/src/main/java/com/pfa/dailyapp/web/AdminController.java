@@ -1,5 +1,7 @@
 package com.pfa.dailyapp.web;
 
+import com.pfa.dailyapp.dtos.ErrorResponse;
+import com.pfa.dailyapp.dtos.SuccessResponse;
 import com.pfa.dailyapp.dtos.UserDTORequest;
 import com.pfa.dailyapp.dtos.UserDTOResponse;
 import com.pfa.dailyapp.services.UserService;
@@ -25,8 +27,12 @@ public class AdminController {
 
     @PostMapping("/addUser")
     public ResponseEntity<?> addUser(@Valid @RequestBody UserDTORequest userDTORequest) {
-        UserDTOResponse saveUser = userService.saveUser(userDTORequest);
-        return ResponseEntity.ok(saveUser);
+        try {
+            UserDTOResponse saveUser = userService.saveUser(userDTORequest);
+            return ResponseEntity.ok(new SuccessResponse("User saved successfully"));
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
     }
 
     @DeleteMapping("/deleteUser/{userId}")

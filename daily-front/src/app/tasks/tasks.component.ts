@@ -18,6 +18,9 @@ export class TasksComponent implements OnInit {
               private taskService: TasksRepositoryService) {}
 
   ngOnInit(): void {
+    if(this.appState.authState.isAuthenticated) {
+      this.appState.getCurrentUserImage();
+    }
     this.fetchTasksByUserId(this.appState.authState.id);
   }
 

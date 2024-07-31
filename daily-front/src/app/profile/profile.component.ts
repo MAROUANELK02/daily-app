@@ -23,6 +23,9 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.appState.authState.isAuthenticated) {
+      this.appState.getCurrentUserImage();
+    }
     this.form = this.fb.group({
       password: this.fb.control(""),
       newPassword: this.fb.control(""),

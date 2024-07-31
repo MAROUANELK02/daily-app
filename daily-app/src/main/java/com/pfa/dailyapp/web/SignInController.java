@@ -77,10 +77,10 @@ public class SignInController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody OtpDTO request) {
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody OtpDTO request) {
         if (request.getPassword().equals(request.getConfirmedPassword())) {
             if (!otpService.validateOtp(request.getEmail(), request.getOtpCode())) {
-                return ResponseEntity.badRequest().body(new ErrorResponse("Invalid OTP"));
+                return ResponseEntity.badRequest().body(new ErrorResponse("Code de vérification invalid"));
             }
             try {
                 userService.resetPassword(request.getEmail(), request.getConfirmedPassword());

@@ -10,7 +10,7 @@
 
     <div class="space-y-2 flex-grow overflow-y-auto">
       <div
-        [ngClass]="{'bg-red-500': task.priority === 'HIGH', 'bg-yellow-600': task.priority === 'MEDIUM', 'bg-green-400': task.priority === 'LOW'}"
+        [ngClass]="{'bg-red-500': task.priority === 'HIGH', 'bg-yellow-500': task.priority === 'MEDIUM', 'bg-green-400': task.priority === 'LOW'}"
         class="p-2 rounded-lg shadow text-1xl max-w-sm relative" *ngFor="let task of tasks">
         <h3 class="font-bold text-white">{{ task.title }}</h3>
         <p class="text-white"><span class="font-semibold">Description:</span> <br>

@@ -15,5 +15,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "WHEN com.pfa.dailyapp.enums.TaskPriority.LOW THEN 3 " +
             "END")
     Page<Task> findByUserUserIdAndStatusOrderByPriority(Long userId, TaskStatus status, Pageable pageable);
-    Page<Task> findAllByStatus(TaskStatus status, Pageable pageable);
+    @Query("SELECT t FROM Task t JOIN t.user u WHERE t.status = :status AND " +
+            "(u.firstname LIKE %:keyword% OR u.lastname LIKE %:keyword%)")
+    Page<Task> findAllByStatusAndUserKeyword(TaskStatus status, String keyword, Pageable pageable);
 }

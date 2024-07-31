@@ -26,12 +26,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Size(min = 4, max = 30)
-    @NotBlank
+    @Size(min = 4, max = 30, message = "Le prénom doit contenir au moins 4 lettres")
+    @NotBlank(message = "Le prénom ne doit pas être vide")
     private String firstname;
 
-    @Size(min = 4, max = 30)
-    @NotBlank
+    @Size(min = 4, max = 30, message = "message = Le nom doit contenir au moins 4 lettres")
+    @NotBlank(message = "Le nom ne doit pas être vide")
     private String lastname;
 
     @Email(message = "Please enter a valid email")
@@ -49,7 +49,7 @@ public class User {
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character (@#$%^&+=), and must not contain any whitespace.")
     private String password;
 
-    @Size(min = 4, max = 50)
+    @Size(min = 4, max = 50, message = "Le rôle doit contenir au moins 4 lettres")
     private String jobTitle;
 
     @Value("")
