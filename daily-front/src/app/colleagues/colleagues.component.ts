@@ -54,7 +54,7 @@ export class ColleaguesComponent implements OnInit {
   }
 
   getUserCardClass(tasksCount: number): string {
-    if (tasksCount <= 1) {
+    if (tasksCount <= 2) {
       return 'bg-green-400'; // Background green for low load
     } else if (tasksCount <= 3) {
       return 'bg-yellow-300'; // Background yellow for moderate load
