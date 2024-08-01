@@ -22,6 +22,12 @@ export class AppStateService {
     errorMessage :"",
   }
 
+  tasksCount : number = 0;
+
+  public setTasksCount(count: number) {
+    this.tasksCount = count;
+  }
+
   private getImageUri(): Observable<string> {
     return this.http.get(`http://localhost:5000/api/users/image/${this.authState.id}`,
       { responseType: 'blob' }).pipe(

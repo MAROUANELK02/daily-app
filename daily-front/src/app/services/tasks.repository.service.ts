@@ -17,6 +17,7 @@ export class TasksRepositoryService {
   createTask(task : Task) {
     this.http.post<Task>(this.host + "/task/" + this.appState.authState.id, task).subscribe({
       next : ()=>{
+        this.fetchTasksCount();
         window.alert("Tâche ajoutée");
         this.router.navigateByUrl("/tasks");
       },
@@ -123,5 +124,11 @@ export class TasksRepositoryService {
 
   deleteTask(task: Task) :Observable<any>{
     return this.http.delete(`${this.host}/task/${task.taskId}`);
+  }
+
+  public fetchTasksCount() {
+    this.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
+      tasks => this.appState.setTasksCount(tasks.content.length)
+    );
   }
 }

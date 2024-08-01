@@ -1,0 +1,14 @@
+.quill-editor-container {
+  max-height: 200px;
+  overflow: auto;
+}
+
+.ql-editor {
+  box-sizing: border-box;
+  height: auto;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

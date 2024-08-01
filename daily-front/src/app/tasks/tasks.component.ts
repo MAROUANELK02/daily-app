@@ -89,6 +89,7 @@ export class TasksComponent implements OnInit {
       task.status = "DONE";
       this.taskService.changeStatus(task).subscribe({
         next: (data) => {
+          this.taskService.fetchTasksCount();
           this.fetchTasksByUserId(this.appState.authState.id);
           window.alert(data.message)
         },
@@ -104,6 +105,7 @@ export class TasksComponent implements OnInit {
       task.status = "IN_PROGRESS";
       this.taskService.changeStatus(task).subscribe({
         next: (data) => {
+          this.taskService.fetchTasksCount();
           this.fetchTasksByUserId(this.appState.authState.id);
           window.alert(data.message)
         },
@@ -118,6 +120,7 @@ export class TasksComponent implements OnInit {
     if(window.confirm("Êtes-vous sûr de vouloir supprimer cette tâche ?")) {
       this.taskService.deleteTask(task).subscribe({
         next: (data) => {
+          this.taskService.fetchTasksCount();
           this.fetchTasksByUserId(this.appState.authState.id);
           window.alert(data.message)
         },
