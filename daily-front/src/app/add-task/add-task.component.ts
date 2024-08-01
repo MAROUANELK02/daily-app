@@ -48,7 +48,6 @@ export class AddTaskComponent implements OnInit{
       task.priority = this.form.value.priority;
       this.taskService.createTask(task);
       this.form.reset();
-      this.router.navigateByUrl("/colleagues");
     }
   }
 }

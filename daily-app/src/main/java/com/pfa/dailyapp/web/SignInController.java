@@ -42,7 +42,7 @@ public class SignInController {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (Exception e) {
-            throw new RuntimeException("Incorrect username or password");
+            throw new RuntimeException("Username ou mot de passe incorrect");
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -66,14 +66,14 @@ public class SignInController {
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestParam(name = "email") String email) {
         if (!userService.existsByEmail(email)) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("Email not found"));
+            return ResponseEntity.badRequest().body(new ErrorResponse("Email non trouvé"));
         }
 
         String otp = otpService.generateOtp();
         otpService.saveOtp(email, otp);
         emailService.sendEmail(email, otp);
 
-        return ResponseEntity.ok(new SuccessResponse("OTP sent to email"));
+        return ResponseEntity.ok(new SuccessResponse("Code OTP de vérification envoyé par e-mail"));
     }
 
     @PostMapping("/reset-password")
@@ -85,13 +85,13 @@ public class SignInController {
             try {
                 userService.resetPassword(request.getEmail(), request.getConfirmedPassword());
                 otpService.deleteOtp(request.getEmail());
-                return ResponseEntity.ok(new SuccessResponse("Password reset successfully"));
+                return ResponseEntity.ok(new SuccessResponse("Réinitialisation du mot de passe réussie"));
             } catch (UserNotFoundException e) {
                 log.error(e.getMessage());
-                return ResponseEntity.badRequest().body(new ErrorResponse("User not Found !"));
+                return ResponseEntity.badRequest().body(new ErrorResponse("Utilisateur non trouvé !"));
             }
         } else {
-            return ResponseEntity.badRequest().body(new ErrorResponse("Passwords don't match"));
+            return ResponseEntity.badRequest().body(new ErrorResponse("Les mots de passe ne correspondent pas"));
         }
     }
 

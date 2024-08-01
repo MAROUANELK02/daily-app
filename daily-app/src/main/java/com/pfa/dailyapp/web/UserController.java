@@ -94,7 +94,7 @@ public class UserController {
     public ResponseEntity<?> saveTask(@PathVariable Long userId,
             @RequestBody TaskDTORequest taskDTORequest) {
         taskService.saveTask(taskDTORequest, userId);
-        return ResponseEntity.ok(new SuccessResponse("Task added successfully"));
+        return ResponseEntity.ok(new SuccessResponse("Tâche ajoutée avec succès"));
     }
 
     @PostMapping("/image/{userId}")
@@ -102,7 +102,7 @@ public class UserController {
                                       @RequestBody MultipartFile image) {
         try {
             userService.addImage(userId, image);
-            return ResponseEntity.ok(new SuccessResponse("Image added successfully"));
+            return ResponseEntity.ok(new SuccessResponse("Image ajoutée avec succès"));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -113,7 +113,7 @@ public class UserController {
                                          @RequestBody MultipartFile image) {
         try {
             userService.updateImage(userId, image);
-            return ResponseEntity.ok(new SuccessResponse("Image updated successfully"));
+            return ResponseEntity.ok(new SuccessResponse("Image mise à jour avec succès"));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -123,7 +123,7 @@ public class UserController {
     public ResponseEntity<?> updateUser(@RequestBody UserDTOResponse userDTOResponse) {
         try {
             userService.updateUser(userDTOResponse);
-            return ResponseEntity.ok(new SuccessResponse("User updated successfully"));
+            return ResponseEntity.ok(new SuccessResponse("Mise à jour de l'utilisateur réussie"));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -134,7 +134,7 @@ public class UserController {
                                         @RequestBody TaskDTORequest taskDTORequest) {
         try {
             taskService.updateTask(taskDTORequest, taskId);
-            return ResponseEntity.ok(new SuccessResponse("Task updated successfully"));
+            return ResponseEntity.ok(new SuccessResponse("Tâche mise à jour avec succès"));
         } catch (TaskNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -145,7 +145,7 @@ public class UserController {
                                               @RequestParam("status") TaskStatus status) {
         try {
             taskService.changeTaskStatus(status, taskId);
-            return ResponseEntity.ok(new SuccessResponse("Task status changed successfully"));
+            return ResponseEntity.ok(new SuccessResponse("Le statut de la tâche a été modifié avec succès"));
         } catch (TaskNotFoundException | UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -156,7 +156,7 @@ public class UserController {
                                                 @RequestParam("priority") TaskPriority priority) {
         try {
             taskService.changeTaskPriority(priority, taskId);
-            return ResponseEntity.ok(new SuccessResponse("Task priority changed successfully"));
+            return ResponseEntity.ok(new SuccessResponse("La priorité de la tâche a été modifiée avec succès"));
         } catch (TaskNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -168,9 +168,9 @@ public class UserController {
         try {
             if(changePasswordDTO.newPassword().equals(changePasswordDTO.confirmedPassword())) {
                 userService.changePassword(userId, changePasswordDTO.oldPassword(), changePasswordDTO.confirmedPassword());
-                return ResponseEntity.ok(new SuccessResponse("Password changed successfully"));
+                return ResponseEntity.ok(new SuccessResponse("La priorité de la tâche a été modifiée avec succès"));
             } else {
-                return ResponseEntity.badRequest().body(new ErrorResponse("Passwords don't match"));
+                return ResponseEntity.badRequest().body(new ErrorResponse("Les mots de passe ne correspondent pas"));
             }
         } catch (UserNotFoundException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
@@ -181,7 +181,7 @@ public class UserController {
     public ResponseEntity<?> deleteTask(@PathVariable("taskId") Long taskId) {
         try {
             taskService.deleteTask(taskId);
-            return ResponseEntity.ok(new SuccessResponse("Task deleted successfully"));
+            return ResponseEntity.ok(new SuccessResponse("Tâche supprimée avec succès"));
         } catch (TaskNotFoundException | UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -191,7 +191,7 @@ public class UserController {
     public ResponseEntity<?> deleteImage(@PathVariable("userId") Long userId) {
         try {
             userService.deleteImage(userId);
-            return ResponseEntity.ok(new SuccessResponse("Image deleted successfully"));
+            return ResponseEntity.ok(new SuccessResponse("Image supprimée avec succès"));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }

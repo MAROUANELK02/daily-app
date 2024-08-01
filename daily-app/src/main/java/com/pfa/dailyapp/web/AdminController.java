@@ -29,7 +29,7 @@ public class AdminController {
     public ResponseEntity<?> addUser(@Valid @RequestBody UserDTORequest userDTORequest) {
         try {
             UserDTOResponse saveUser = userService.saveUser(userDTORequest);
-            return ResponseEntity.ok(new SuccessResponse("User saved successfully"));
+            return ResponseEntity.ok(new SuccessResponse("L'utilisateur a été enregistré avec succès"));
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
@@ -39,7 +39,7 @@ public class AdminController {
     public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
         try {
             userService.deleteUser(userId);
-            return ResponseEntity.ok("User deleted successfully");
+            return ResponseEntity.ok("L'utilisateur a été supprimé avec succès");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

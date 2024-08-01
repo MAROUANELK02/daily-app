@@ -4,6 +4,7 @@ import {AppStateService} from "./app-state.service";
 import {Task} from "../models/task.model";
 import {ApiResponse} from "../models/api-response.model";
 import {Observable, tap} from "rxjs";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +12,13 @@ import {Observable, tap} from "rxjs";
 export class TasksRepositoryService {
   host : string = "http://localhost:5000/api/users";
 
-  constructor(private http : HttpClient, private appState : AppStateService) { }
+  constructor(private http : HttpClient, private appState : AppStateService,private router: Router) { }
 
   createTask(task : Task) {
-    this.appState.usersState.status = "LOADING";
     this.http.post<Task>(this.host + "/task/" + this.appState.authState.id, task).subscribe({
       next : ()=>{
-        this.appState.setTasksState({status:"SUCCESS", errorMessage:""});
+        window.alert("Tâche ajoutée");
+        this.router.navigateByUrl("/tasks");
       },
       error : (err)=>{
         this.appState.setTasksState({status:"ERROR", errorMessage:err.statusText});
