@@ -28,7 +28,7 @@ public class AdminController {
     @PostMapping("/addUser")
     public ResponseEntity<?> addUser(@Valid @RequestBody UserDTORequest userDTORequest) {
         try {
-            UserDTOResponse saveUser = userService.saveUser(userDTORequest);
+            userService.saveUser(userDTORequest);
             return ResponseEntity.ok(new SuccessResponse("L'utilisateur a été enregistré avec succès"));
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));

@@ -5,8 +5,10 @@ import com.pfa.dailyapp.enums.TaskPriority;
 import com.pfa.dailyapp.enums.TaskStatus;
 import com.pfa.dailyapp.exceptions.TaskNotFoundException;
 import com.pfa.dailyapp.exceptions.UserNotFoundException;
+import com.pfa.dailyapp.security.jwt.JwtUtils;
 import com.pfa.dailyapp.services.TaskService;
 import com.pfa.dailyapp.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -92,15 +94,25 @@ public class UserController {
 
     @PostMapping("/task/{userId}")
     public ResponseEntity<?> saveTask(@PathVariable Long userId,
-            @RequestBody TaskDTORequest taskDTORequest) {
+                                      @RequestBody TaskDTORequest taskDTORequest,
+                                      HttpServletRequest request) {
+        Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+        if (!userId.equals(tokenUserId)) {
+            return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+        }
         taskService.saveTask(taskDTORequest, userId);
         return ResponseEntity.ok(new SuccessResponse("Tâche ajoutée avec succès"));
     }
 
     @PostMapping("/image/{userId}")
     public ResponseEntity<?> addImage(@PathVariable("userId") Long userId,
-                                      @RequestBody MultipartFile image) {
+                                      @RequestBody MultipartFile image,
+                                      HttpServletRequest request) {
         try {
+            Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+            }
             userService.addImage(userId, image);
             return ResponseEntity.ok(new SuccessResponse("Image ajoutée avec succès"));
         } catch (UserNotFoundException e) {
@@ -110,8 +122,13 @@ public class UserController {
 
     @PutMapping("/image/{userId}")
     public ResponseEntity<?> updateImage(@PathVariable("userId") Long userId,
-                                         @RequestBody MultipartFile image) {
+                                         @RequestBody MultipartFile image,
+                                         HttpServletRequest request) {
         try {
+            Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+            }
             userService.updateImage(userId, image);
             return ResponseEntity.ok(new SuccessResponse("Image mise à jour avec succès"));
         } catch (UserNotFoundException e) {
@@ -120,8 +137,14 @@ public class UserController {
     }
 
     @PutMapping("/user/update")
-    public ResponseEntity<?> updateUser(@RequestBody UserDTOResponse userDTOResponse) {
+    public ResponseEntity<?> updateUser(@RequestBody UserDTOResponse userDTOResponse,
+                                        HttpServletRequest request) {
         try {
+            Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+            Long userId = userDTOResponse.getUserId();
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+            }
             userService.updateUser(userDTOResponse);
             return ResponseEntity.ok(new SuccessResponse("Mise à jour de l'utilisateur réussie"));
         } catch (UserNotFoundException e) {
@@ -131,8 +154,14 @@ public class UserController {
 
     @PutMapping("/task/update/{taskId}")
     public ResponseEntity<?> updateTask(@PathVariable(name = "taskId") Long taskId,
-                                        @RequestBody TaskDTORequest taskDTORequest) {
+                                        @RequestBody TaskDTORequest taskDTORequest,
+                                        HttpServletRequest request) {
         try {
+            Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+            Long userId = taskService.getUserIdByTaskId(taskId);
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+            }
             taskService.updateTask(taskDTORequest, taskId);
             return ResponseEntity.ok(new SuccessResponse("Tâche mise à jour avec succès"));
         } catch (TaskNotFoundException e) {
@@ -142,8 +171,14 @@ public class UserController {
 
     @PatchMapping("/task/{taskId}/status")
     public ResponseEntity<?> changeTaskStatus(@PathVariable("taskId") Long taskId,
-                                              @RequestParam("status") TaskStatus status) {
+                                              @RequestParam("status") TaskStatus status,
+                                              HttpServletRequest request) {
         try {
+            Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+            Long userId = taskService.getUserIdByTaskId(taskId);
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+            }
             taskService.changeTaskStatus(status, taskId);
             return ResponseEntity.ok(new SuccessResponse("Le statut de la tâche a été modifié avec succès"));
         } catch (TaskNotFoundException | UserNotFoundException e) {
@@ -153,8 +188,14 @@ public class UserController {
 
     @PatchMapping("/task/{taskId}/priority")
     public ResponseEntity<?> changeTaskPriority(@PathVariable("taskId") Long taskId,
-                                                @RequestParam("priority") TaskPriority priority) {
+                                                @RequestParam("priority") TaskPriority priority,
+                                                HttpServletRequest request) {
         try {
+            Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+            Long userId = taskService.getUserIdByTaskId(taskId);
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+            }
             taskService.changeTaskPriority(priority, taskId);
             return ResponseEntity.ok(new SuccessResponse("La priorité de la tâche a été modifiée avec succès"));
         } catch (TaskNotFoundException e) {
@@ -178,8 +219,14 @@ public class UserController {
     }
 
     @DeleteMapping("/task/{taskId}")
-    public ResponseEntity<?> deleteTask(@PathVariable("taskId") Long taskId) {
+    public ResponseEntity<?> deleteTask(@PathVariable("taskId") Long taskId,
+                                        HttpServletRequest request) {
         try {
+            Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+            Long userId = taskService.getUserIdByTaskId(taskId);
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+            }
             taskService.deleteTask(taskId);
             return ResponseEntity.ok(new SuccessResponse("Tâche supprimée avec succès"));
         } catch (TaskNotFoundException | UserNotFoundException e) {
@@ -188,8 +235,13 @@ public class UserController {
     }
 
     @DeleteMapping("/image/{userId}")
-    public ResponseEntity<?> deleteImage(@PathVariable("userId") Long userId) {
+    public ResponseEntity<?> deleteImage(@PathVariable("userId") Long userId,
+                                         HttpServletRequest request) {
         try {
+            Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+            }
             userService.deleteImage(userId);
             return ResponseEntity.ok(new SuccessResponse("Image supprimée avec succès"));
         } catch (UserNotFoundException e) {

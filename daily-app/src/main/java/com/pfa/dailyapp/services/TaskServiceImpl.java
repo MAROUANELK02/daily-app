@@ -40,8 +40,14 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDTOResponse getTaskById(Long id) throws TaskNotFoundException {
         log.info("Fetching task with id: {}", id);
-        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Tâche non trouvée"));
         return taskMapper.toTaskDTO(task);
+    }
+
+    @Override
+    public Long getUserIdByTaskId(Long taskId) throws TaskNotFoundException {
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Tâche non trouvée"));
+        return task.getUser().getUserId();
     }
 
     @Override
@@ -76,7 +82,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDTOResponse updateTask(TaskDTORequest task, Long taskId) throws TaskNotFoundException {
         log.info("Updating task: {}", task);
-        Task task1 = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        Task task1 = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("Tâche non trouvée"));
         if (!task1.getTitle().equals(task.getTitle()))
             task1.setTitle(task.getTitle());
         if (!task1.getDescription().equals(task.getDescription()))
@@ -90,7 +96,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDTOResponse changeTaskStatus(TaskStatus status, Long id) throws TaskNotFoundException, UserNotFoundException {
         log.info("Changing task status to: {}", status);
-        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Tâche non trouvée"));
         task.setStatus(status);
         task.setUpdatedAt(LocalDateTime.now());
         Task save = taskRepository.save(task);
@@ -105,7 +111,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDTOResponse changeTaskPriority(TaskPriority priority, Long id) throws TaskNotFoundException {
         log.info("Changing task priority to: {}", priority);
-        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Tâche non trouvée"));
         task.setPriority(priority);
         task.setUpdatedAt(LocalDateTime.now());
         Task save = taskRepository.save(task);
@@ -116,7 +122,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long id) throws TaskNotFoundException, UserNotFoundException {
         log.info("Deleting task with id: {}", id);
-        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Tâche non trouvée"));
         Long userId = task.getUser().getUserId();
         taskRepository.deleteById(id);
         if(task.getStatus().equals(TaskStatus.IN_PROGRESS))

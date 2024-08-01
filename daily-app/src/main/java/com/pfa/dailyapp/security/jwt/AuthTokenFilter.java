@@ -1,5 +1,6 @@
 package com.pfa.dailyapp.security.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,6 +31,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String jwt = parseJwt(request);
             if(jwt != null & jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                Claims claims = jwtUtils.getClaimsFromJwtToken(jwt);
+                Long userId = claims.get("userId", Long.class);
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -41,6 +44,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                request.setAttribute("userId", userId);
             }
         }catch (JwtException e) {
             log.error("JWT error: {}", e.getMessage());

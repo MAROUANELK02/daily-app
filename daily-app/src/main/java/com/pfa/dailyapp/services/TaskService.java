@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 public interface TaskService {
     Page<TaskDTOResponse> getTasksByUserId(Long userId, TaskStatus status, int page, int size);
     TaskDTOResponse getTaskById(Long id) throws TaskNotFoundException;
+    Long getUserIdByTaskId(Long taskId) throws TaskNotFoundException;
     Page<TaskDTOResponse> getTasksHistory(int page, int size, String keyword);
     TaskDTOResponse saveTask(TaskDTORequest task, Long userId);
     TaskDTOResponse updateTask(TaskDTORequest task, Long taskId) throws TaskNotFoundException;
