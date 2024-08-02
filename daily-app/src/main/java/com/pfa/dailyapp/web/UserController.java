@@ -98,7 +98,7 @@ public class UserController {
                                       HttpServletRequest request) {
         Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
         if (!userId.equals(tokenUserId)) {
-            return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+            return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
         }
         taskService.saveTask(taskDTORequest, userId);
         return ResponseEntity.ok(new SuccessResponse("Tâche ajoutée avec succès"));
@@ -111,7 +111,7 @@ public class UserController {
         try {
             Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
             if (!userId.equals(tokenUserId)) {
-                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+                return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
             }
             userService.addImage(userId, image);
             return ResponseEntity.ok(new SuccessResponse("Image ajoutée avec succès"));
@@ -127,7 +127,7 @@ public class UserController {
         try {
             Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
             if (!userId.equals(tokenUserId)) {
-                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+                return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
             }
             userService.updateImage(userId, image);
             return ResponseEntity.ok(new SuccessResponse("Image mise à jour avec succès"));
@@ -143,7 +143,7 @@ public class UserController {
             Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
             Long userId = userDTOResponse.getUserId();
             if (!userId.equals(tokenUserId)) {
-                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+                return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
             }
             userService.updateUser(userDTOResponse);
             return ResponseEntity.ok(new SuccessResponse("Mise à jour de l'utilisateur réussie"));
@@ -160,7 +160,7 @@ public class UserController {
             Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
             Long userId = taskService.getUserIdByTaskId(taskId);
             if (!userId.equals(tokenUserId)) {
-                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+                return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
             }
             taskService.updateTask(taskDTORequest, taskId);
             return ResponseEntity.ok(new SuccessResponse("Tâche mise à jour avec succès"));
@@ -177,7 +177,7 @@ public class UserController {
             Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
             Long userId = taskService.getUserIdByTaskId(taskId);
             if (!userId.equals(tokenUserId)) {
-                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+                return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
             }
             taskService.changeTaskStatus(status, taskId);
             return ResponseEntity.ok(new SuccessResponse("Le statut de la tâche a été modifié avec succès"));
@@ -194,7 +194,7 @@ public class UserController {
             Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
             Long userId = taskService.getUserIdByTaskId(taskId);
             if (!userId.equals(tokenUserId)) {
-                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+                return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
             }
             taskService.changeTaskPriority(priority, taskId);
             return ResponseEntity.ok(new SuccessResponse("La priorité de la tâche a été modifiée avec succès"));
@@ -225,7 +225,7 @@ public class UserController {
             Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
             Long userId = taskService.getUserIdByTaskId(taskId);
             if (!userId.equals(tokenUserId)) {
-                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+                return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
             }
             taskService.deleteTask(taskId);
             return ResponseEntity.ok(new SuccessResponse("Tâche supprimée avec succès"));
@@ -240,7 +240,7 @@ public class UserController {
         try {
             Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
             if (!userId.equals(tokenUserId)) {
-                return ResponseEntity.status(403).body(new ErrorResponse("Unauthorized"));
+                return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
             }
             userService.deleteImage(userId);
             return ResponseEntity.ok(new SuccessResponse("Image supprimée avec succès"));

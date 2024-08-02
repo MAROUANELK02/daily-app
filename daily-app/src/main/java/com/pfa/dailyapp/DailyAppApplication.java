@@ -26,87 +26,33 @@ public class DailyAppApplication {
     }
 
     //@Bean
-    CommandLineRunner commandLineRunner(UserRepository userRepository, TaskRepository taskRepository,
-                                        RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner commandLineRunner(UserRepository userRepository, RoleRepository roleRepository,
+                                        PasswordEncoder passwordEncoder) {
         return args -> {
-
-            List<Role> roles = List.of(Role.builder().roleName(ERole.ROLE_ADMIN).build(),
-                    Role.builder().roleName(ERole.ROLE_USER).build());
-            roleRepository.saveAll(roles);
-
-            User user1 = User.builder()
-                    .firstname("Mehdi")
-                    .lastname("chef")
-                    .email("mehdichef@example.com")
-                    .username("mehdichef")
-                    .password(passwordEncoder.encode("Pass@word1"))
-                    .jobTitle("Chef projet")
-                    .tasksCount(1)
-                    .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_ADMIN),
-                            roleRepository.findByRoleName(ERole.ROLE_USER)))
-                    .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
-                    .build();
-
-            User user2 = User.builder()
-                    .firstname("sara")
-                    .lastname("sales")
-                    .email("sarasales@example.com")
-                    .username("sarasales")
-                    .password(passwordEncoder.encode("Pass@word1"))
-                    .jobTitle("Sales manager")
-                    .tasksCount(1)
-                    .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_USER)))
-                    .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
-                    .build();
-
-            User user3 = User.builder()
-                    .firstname("nassim")
-                    .lastname("ghelab")
-                    .email("nassimghelab@example.com")
-                    .username("nassimghelab")
-                    .password(passwordEncoder.encode("Pass@word1"))
-                    .jobTitle("Software engineer")
-                    .tasksCount(1)
-                    .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_USER)))
-                    .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
-                    .build();
-
-            userRepository.saveAll(List.of(user1, user2, user3));
-
-            Task task1 = Task.builder()
-                    .title("Task 1")
-                    .description("Task 1 description")
-                    .status(TaskStatus.IN_PROGRESS)
-                    .priority(TaskPriority.HIGH)
-                    .user(userRepository.findByUsernameOrEmail("mehdichef", "mehdichef"))
-                    .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
-                    .build();
-
-            Task task2 = Task.builder()
-                    .title("Task 2")
-                    .description("Task 2 description")
-                    .status(TaskStatus.IN_PROGRESS)
-                    .priority(TaskPriority.MEDIUM)
-                    .user(userRepository.findByUsernameOrEmail("sarasales@example.com", "sarasales@example.com"))
-                    .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
-                    .build();
-
-            Task task3 = Task.builder()
-                    .title("Task 3")
-                    .description("Task 3 description")
-                    .status(TaskStatus.IN_PROGRESS)
-                    .priority(TaskPriority.LOW)
-                    .user(userRepository.findByUsernameOrEmail("nassimghelab", "nassimghelab"))
-                    .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
-                    .build();
-
-            taskRepository.saveAll(List.of(task1, task2, task3));
+            if(roleRepository.findByRoleName(ERole.ROLE_ADMIN) == null) {
+                Role roleAdmin = Role.builder().roleName(ERole.ROLE_ADMIN).build();
+                roleRepository.save(roleAdmin);
+            }
+            if(roleRepository.findByRoleName(ERole.ROLE_USER) == null) {
+                Role roleUser = Role.builder().roleName(ERole.ROLE_USER).build();
+                roleRepository.save(roleUser);
+            }
+            if(userRepository.existsByUsername("Mehdi-OUADOU")) {
+                User user = User.builder()
+                        .firstname("Mehdi")
+                        .lastname("OUADOU")
+                        .email("mehdi.ouadou@hps-worldwide.com")
+                        .username("Mehdi-OUADOU")
+                        .password(passwordEncoder.encode("Pass@word1"))
+                        .jobTitle("Head of Operations")
+                        .tasksCount(0)
+                        .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_ADMIN),
+                                roleRepository.findByRoleName(ERole.ROLE_USER)))
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build();
+                userRepository.save(user);
+            }
         };
     }
 }

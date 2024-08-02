@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  # Service MySQL
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: E-BANK
+    ports:
+      - "3306:3306"

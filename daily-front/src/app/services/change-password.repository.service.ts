@@ -21,7 +21,7 @@ export class ChangePasswordRepositoryService {
       }
     }).pipe(
       tap((response: any) => {
-        if (response.message === 'OTP sent to email') {
+        if (response.message.includes('Code OTP de vérification envoyé')) {
           this.appState.setChangePasswordState({ status: 'success', errorMessage: '' });
         } else {
           this.appState.setChangePasswordState({ status: 'failed', errorMessage: response.error });

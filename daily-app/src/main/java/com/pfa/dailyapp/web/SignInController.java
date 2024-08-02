@@ -49,7 +49,7 @@ public class SignInController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        String jwt = jwtUtils.generateTokenFromUsername(userDetails.getUsername());
+        String jwt = jwtUtils.generateTokenFromUsername(userDetails.getUsername(), userDetails.getId());
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
