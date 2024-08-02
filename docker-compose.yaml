@@ -6,7 +6,55 @@ services:
     image: mysql:latest
     container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: E-BANK
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: daily_app
     ports:
       - "3306:3306"
+
+  # Service Backend
+  dailyMeeting-backend:
+    build:
+      context: ./daily-app
+      dockerfile: Dockerfile
+    container_name: dailyMeeting-backend-container
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/daily_app?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: my-secret-pw
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
+      SPRING_JPA_SHOW_SQL: "false"
+      JWT_SECRET: cYAr0yTHvx4NWxZzBFIzndSShkh6JLUX9ZbJa4cImdsO1VADkCJzg2nXKLgywN7E
+      JWT_EXPIRATIONMS: "3600000"
+      UPLOAD_PATH: /app/src/main/resources/images
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: "587"
+      SPRING_MAIL_USERNAME: marouanelk02@gmail.com
+      SPRING_MAIL_PASSWORD: ipzprwexdihebsxd
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+
+  # Service Frontend
+  dailyMeeting-frontend:
+    build:
+      context: ./daily-front
+      dockerfile: Dockerfile
+    container_name: dailyMeeting-frontend-container
+    ports:
+      - "8081:80"
+
+  # Service phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-container
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
