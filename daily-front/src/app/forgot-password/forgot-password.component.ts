@@ -33,7 +33,7 @@ export class ForgotPasswordComponent implements OnInit{
       (response: any) => {
         if (this.appState.changePasswordState.status === 'success') {
           this.openResetPassword = !this.openResetPassword;
-          window.alert("Email sent successfully");
+          window.alert("E-mail envoyé avec succès");
         } else {
           window.alert(`Error: ${this.appState.changePasswordState.errorMessage}`);
         }

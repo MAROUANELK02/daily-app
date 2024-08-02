@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTOResponse getUserById(Long id) throws UserNotFoundException {
         log.info("Getting user by id: {}", id);
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
         return userMapper.toUserDTO(user);
     }
 
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTOResponse updateUser(UserDTOResponse user) throws UserNotFoundException {
         log.info("Updating user: {}", user);
-        User user1 = userRepository.findById(user.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user1 = userRepository.findById(user.getUserId()).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
         if(!user1.getFirstname().equals(user.getFirstname()))
             user1.setFirstname(user.getFirstname());
         if (!user1.getLastname().equals(user.getLastname()))
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) throws UserNotFoundException {
         log.info("Deleting user by id: {}", id);
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
         user.setDeleted(true);
         user.setUpdatedAt(LocalDateTime.now());
         userRepository.save(user);
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTOResponse addImage(Long userId, MultipartFile file) throws UserNotFoundException {
         log.info("Adding image to user with id: {}", userId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
 
         if (file.isEmpty()) {
             log.info("File is empty");
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTOResponse updateImage(Long userId, MultipartFile file) throws UserNotFoundException {
         log.info("Updating image for user with id: {}", userId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
 
         if (file.isEmpty()) {
             log.info("File is empty");
@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteImage(Long userId) throws UserNotFoundException {
         log.info("Deleting image for user with id: {}", userId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
 
         if (user.getImage() != null) {
             Path existingImagePath = Paths.get(user.getImage());
@@ -197,7 +197,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public byte[] getImage(Long userId) throws UserNotFoundException {
         log.info("Getting image for user with id: {}", userId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
 
         if (user.getImage() == null || user.getImage().isEmpty()) {
             log.info("Image not found for user with id: {}", userId);
@@ -216,7 +216,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void incrementTasksCount(Long userId) throws UserNotFoundException {
         log.info("incrémentation du nombre de tâches pour l'utilisateur avec l'id: {}", userId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
         user.setTasksCount(user.getTasksCount() + 1);
         userRepository.save(user);
         log.info("Nombre de tâches incrémenté avec succès");
@@ -225,7 +225,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void decrementTasksCount(Long userId) throws UserNotFoundException {
         log.info("Décrémentation du nombre de tâches pour l'utilisateur avec l'id: {}", userId);
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
         user.setTasksCount(user.getTasksCount() - 1);
         userRepository.save(user);
         log.info("Nombre de tâches décrémenté avec succès");
@@ -248,20 +248,19 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(confirmedPassword));
             userRepository.save(user);
         } else {
-            throw new UserNotFoundException("User not found !");
+            throw new UserNotFoundException("Utilisateur non trouvé !");
         }
     }
 
     @Override
     public void changePassword(Long userId, String oldPassword, String newPassword) throws UserNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
         if(passwordEncoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
         } else {
-            throw new IllegalArgumentException("Old password is incorrect");
+            throw new IllegalArgumentException("Ancien mot de passe est incorrect");
         }
     }
-
 
 }

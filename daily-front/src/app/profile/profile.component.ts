@@ -40,15 +40,20 @@ export class ProfileComponent implements OnInit {
   }
 
   changePassword() {
-    if (window.confirm("Are you sure you want to change your password?")) {
+    if (window.confirm("Etes-vous sûr de vouloir changer votre mot de passe ?")) {
       this.userService.changePassword(this.appState.authState.id, this.form.value.password,
         this.form.value.newPassword, this.form.value.confirmedPassword).subscribe({
         next: (data) => {
           window.alert(data.message);
           this.form.reset();
         },
-        error: (err) => {
-          window.alert(err.error.error);
+        error: (error) => {
+          if (error.error[0]?.includes("Le mot de passe")) {
+            window.alert(error.error[0])
+          } else {
+            const errorMessage = error.error?.error || 'An error occurred';
+            window.alert(`Error: ${errorMessage}`);
+          }
         }
       });
     }

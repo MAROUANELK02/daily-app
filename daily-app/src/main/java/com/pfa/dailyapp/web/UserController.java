@@ -9,6 +9,7 @@ import com.pfa.dailyapp.security.jwt.JwtUtils;
 import com.pfa.dailyapp.services.TaskService;
 import com.pfa.dailyapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -205,11 +206,16 @@ public class UserController {
 
     @PatchMapping("/{userId}/changePassword")
     public ResponseEntity<?> changePassword(@PathVariable("userId") Long userId,
-                                            @RequestBody ChangePasswordDTO changePasswordDTO) {
+                                            @Valid @RequestBody ChangePasswordDTO changePasswordDTO,
+                                            HttpServletRequest request) {
         try {
+            Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
+            if (!userId.equals(tokenUserId)) {
+                return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
+            }
             if(changePasswordDTO.newPassword().equals(changePasswordDTO.confirmedPassword())) {
                 userService.changePassword(userId, changePasswordDTO.oldPassword(), changePasswordDTO.confirmedPassword());
-                return ResponseEntity.ok(new SuccessResponse("La priorité de la tâche a été modifiée avec succès"));
+                return ResponseEntity.ok(new SuccessResponse("Réinitialisation du mot de passe réussie"));
             } else {
                 return ResponseEntity.badRequest().body(new ErrorResponse("Les mots de passe ne correspondent pas"));
             }

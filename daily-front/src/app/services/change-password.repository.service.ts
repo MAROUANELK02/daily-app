@@ -42,8 +42,8 @@ export class ChangePasswordRepositoryService {
       confirmedPassword: confirmedPassword
     }).subscribe(
       (response: any) => {
-        if (response.message.includes("Password reset successful")) {
-          window.alert("Password reset successfully");
+        if (response.message.includes("Réinitialisation du mot de passe réussie")) {
+          window.alert("Réinitialisation du mot de passe réussie");
           this.router.navigate(['/login']);
         } else {
           this.appState.setChangePasswordState({ status: 'failed', errorMessage: response.error });
