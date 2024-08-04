@@ -4,7 +4,7 @@ import com.pfa.dailyapp.dtos.*;
 import com.pfa.dailyapp.exceptions.UserNotFoundException;
 import com.pfa.dailyapp.security.UserDetailsImpl;
 import com.pfa.dailyapp.security.jwt.JwtUtils;
-import com.pfa.dailyapp.security.mailing.EmailSenderService;
+import com.pfa.dailyapp.mailing.EmailSenderService;
 import com.pfa.dailyapp.services.OtpService;
 import com.pfa.dailyapp.services.UserService;
 import jakarta.validation.Valid;

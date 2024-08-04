@@ -39,6 +39,7 @@ services:
       JWT_SECRET: cYAr0yTHvx4NWxZzBFIzndSShkh6JLUX9ZbJa4cImdsO1VADkCJzg2nXKLgywN7E
       JWT_EXPIRATIONS: "3600000"
       UPLOAD_PATH: /app/src/main/resources/images
+      LOGO_PATH: /app/src/main/resources/static/hps.png
       SPRING_MAIL_HOST: smtp.gmail.com
       SPRING_MAIL_PORT: "587"
       SPRING_MAIL_USERNAME: marouanelk02@gmail.com
