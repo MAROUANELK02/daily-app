@@ -25,7 +25,7 @@ public class DailyAppApplication {
         SpringApplication.run(DailyAppApplication.class, args);
     }
 
-    //@Bean
+    @Bean
     CommandLineRunner commandLineRunner(UserRepository userRepository, RoleRepository roleRepository,
                                         PasswordEncoder passwordEncoder) {
         return args -> {
@@ -37,7 +37,7 @@ public class DailyAppApplication {
                 Role roleUser = Role.builder().roleName(ERole.ROLE_USER).build();
                 roleRepository.save(roleUser);
             }
-            if(userRepository.existsByUsername("Mehdi-OUADOU")) {
+            if(!userRepository.existsByUsername("Mehdi-OUADOU")) {
                 User user = User.builder()
                         .firstname("Mehdi")
                         .lastname("OUADOU")

@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e.getMessage());
         }
 
-        user.setImage(path.toString());
+        user.setImage(fileName);
         user.setUpdatedAt(LocalDateTime.now());
         User save = userRepository.save(user);
         log.info("Image added successfully");
@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
 
         // Delete the existing image if it exists
         if (user.getImage() != null) {
-            Path existingImagePath = Paths.get(user.getImage());
+            Path existingImagePath = Paths.get(uploadPath, user.getImage());
             try {
                 Files.deleteIfExists(existingImagePath);
             } catch (IOException e) {
@@ -164,7 +164,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // Update user with new image path
-        user.setImage(newPath.toString());
+        user.setImage(fileName);
         user.setUpdatedAt(LocalDateTime.now());
         User updatedUser = userRepository.save(user);
         log.info("Image updated successfully");
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
 
         if (user.getImage() != null) {
-            Path existingImagePath = Paths.get(user.getImage());
+            Path existingImagePath = Paths.get(uploadPath, user.getImage());
             try {
                 Files.deleteIfExists(existingImagePath);
                 log.info("Image deleted successfully");
@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Image not found for user with id: " + userId);
         }
 
-        Path path = Paths.get(user.getImage());
+        Path path = Paths.get(uploadPath, user.getImage());
         try {
             return Files.readAllBytes(path);
         } catch (IOException e) {

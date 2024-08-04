@@ -1,26 +1,18 @@
-# Utiliser une image de base Java
-FROM openjdk:17-jdk-slim
+# Stage 1: Build the Java app
+FROM maven:3.8.5-openjdk-17-slim as build
 
-# Installer Maven
-RUN apt-get update && \
-    apt-get install -y maven && \
-    rm -rf /var/lib/apt/lists/*
-
-# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier le fichier pom.xml et télécharger les dépendances
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copier le reste des fichiers du projet
+COPY pom.xml ./
 COPY src ./src
 
-# Compiler le projet
 RUN mvn clean package -DskipTests
 
-# Exposer le port de l'application
-EXPOSE 5000
+# Stage 2: Run the Java app
+FROM openjdk:17-jdk-slim
 
-# Démarrer l'application
-CMD ["java", "-jar", "target/daily-app-0.0.1-SNAPSHOT.jar"]
+COPY --from=build /app/target/daily-app-0.0.1-SNAPSHOT.jar /app/daily-app-0.0.1-SNAPSHOT.jar
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "/app/daily-app-0.0.1-SNAPSHOT.jar"]
