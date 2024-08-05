@@ -3,8 +3,9 @@ import {AppStateService} from "../services/app-state.service";
 import {ColleaguesRepositoryService} from "../services/colleagues.repository.service";
 import {User} from "../models/user.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
-import {catchError, map, Observable, of} from "rxjs";
+import {Observable} from "rxjs";
+import {AuthRepositoryService} from "../services/auth.repository.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-profile',
@@ -14,11 +15,11 @@ import {catchError, map, Observable, of} from "rxjs";
 export class ProfileComponent implements OnInit {
   user !: User;
   form !: FormGroup;
-  private host: string = "http://localhost:5000/api/users";
 
   constructor(public appState: AppStateService,
-              private http: HttpClient,
               public fb: FormBuilder,
+              private authService : AuthRepositoryService,
+              private route : Router,
               private userService: ColleaguesRepositoryService) {
   }
 
@@ -26,17 +27,28 @@ export class ProfileComponent implements OnInit {
     if(this.appState.authState.isAuthenticated) {
       this.appState.getCurrentUserImage();
     }
-    this.form = this.fb.group({
-      password: this.fb.control(""),
-      newPassword: this.fb.control(""),
-      confirmedPassword: this.fb.control("")
-    });
+    this.fetchCurrentUser();
+  }
+
+  private fetchCurrentUser() {
     this.userService.getUserById(this.appState.authState.id).subscribe(
       (data) => {
         this.user = data;
+        this.formInitialization();
       }, (err) => {
         console.log(err);
       });
+  }
+
+  private formInitialization() {
+    this.form = this.fb.group({
+      password: this.fb.control(""),
+      newPassword: this.fb.control(""),
+      confirmedPassword: this.fb.control(""),
+      email: [this.user.email],
+      username: [this.user.username],
+      jobTitle: [this.user.jobTitle]
+    });
   }
 
   changePassword() {
@@ -45,7 +57,7 @@ export class ProfileComponent implements OnInit {
         this.form.value.newPassword, this.form.value.confirmedPassword).subscribe({
         next: (data) => {
           window.alert(data.message);
-          this.form.reset();
+          this.formInitialization();
         },
         error: (error) => {
           if (error.error[0]?.includes("Le mot de passe")) {
@@ -57,17 +69,6 @@ export class ProfileComponent implements OnInit {
         }
       });
     }
-  }
-
-  private getUserImageById(userId: number): Observable<string> {
-    return this.http.get(this.host + `/image/${userId}`, {responseType: 'blob'}).pipe(
-      map((imageBlob: Blob) => {
-        return window.URL.createObjectURL(imageBlob);
-      }),
-      catchError(() => {
-        return of('/profile.jpg');
-      })
-    );
   }
 
   onFileSelected(event: any): void {
@@ -87,63 +88,38 @@ export class ProfileComponent implements OnInit {
 
       imageUpload$.subscribe({
         next: () => {
-          this.getUserImageById(userId).subscribe({
-            next: (imageUri: string) => {
-              const authState = {
-                isAuthenticated: this.appState.authState.isAuthenticated,
-                username: this.appState.authState.username,
-                id: this.appState.authState.id,
-                email: this.appState.authState.email,
-                roles: this.appState.authState.roles,
-                token: this.appState.authState.token
-              };
-              const updatedAuthState = {
-                ...authState,
-                imageUri: imageUri
-              };
-              this.appState.setAuthState(updatedAuthState);
-              localStorage.setItem('authState', JSON.stringify(updatedAuthState));
-            },
-            error: (error) => {
-              console.error('Error getting image:', error);
+          this.appState.getCurrentUserImage();
             }
           });
-        },
-        error: (error) => {
-          console.error('Error uploading image:', error);
-        }
-      });
+      }
     }
-  }
 
   onDeleteImage() {
     if (window.confirm("Êtes vous sûr de vouloir supprimer votre photo de profil ?")) {
       this.userService.deleteImage(this.appState.authState.id).subscribe({
         next: () => {
-          const userId = this.appState.authState.id;
-          this.getUserImageById(userId).subscribe({
-            next: (imageUri: string) => {
-              const authState = {
-                isAuthenticated: this.appState.authState.isAuthenticated,
-                username: this.appState.authState.username,
-                id: this.appState.authState.id,
-                email: this.appState.authState.email,
-                roles: this.appState.authState.roles,
-                token: this.appState.authState.token
-              };
-              const updatedAuthState = {
-                ...authState,
-                imageUri: imageUri
-              };
-              this.appState.setAuthState(updatedAuthState);
-              localStorage.setItem('authState', JSON.stringify(updatedAuthState));
-            },
-            error: (error) => {
-              console.error('Error getting image:', error);
-            }
-          });
-        }
+          this.appState.getCurrentUserImage();
+          },
       });
+    }
+  }
+
+  editProfile() {
+    if (window.confirm("Êtes vous sûr de vouloir modifier vos coordonnées ?")) {
+      this.userService.editProfile(this.user.userId, this.form.value.email, this.form.value.username, this.form.value.jobTitle).subscribe({
+        next: (data) => {
+          window.alert(data.message);
+          if(this.user.username !== this.form.value.username) {
+            this.authService.logout().finally(() => {
+              this.route.navigateByUrl("/login");
+            });
+          }
+          this.fetchCurrentUser();
+        },
+        error: (err) => {
+          window.alert(err.error[0])
+        }
+      })
     }
   }
 }

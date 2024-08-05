@@ -2,10 +2,7 @@ package com.pfa.dailyapp.entities;
 
 import com.pfa.dailyapp.enums.ERole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "roles")

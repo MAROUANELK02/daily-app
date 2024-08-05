@@ -12,6 +12,7 @@ import {Router} from "@angular/router";
 export class ForgotPasswordComponent implements OnInit{
   form!: FormGroup;
   openResetPassword: boolean = false;
+  sendingEmail: boolean = false;
 
   constructor(private appState: AppStateService,
             private changePasswordRepository: ChangePasswordRepositoryService,
@@ -28,18 +29,22 @@ export class ForgotPasswordComponent implements OnInit{
   }
 
   sendEmail() {
+    this.sendingEmail = !this.sendingEmail;
     this.appState.setChangePasswordState({ email: this.form.value.email });
     this.changePasswordRepository.sendEmail().subscribe(
       (response: any) => {
         if (this.appState.changePasswordState.status === 'success') {
           this.openResetPassword = !this.openResetPassword;
+          this.sendingEmail = !this.sendingEmail;
           window.alert("E-mail envoyé avec succès");
         } else {
+          this.sendingEmail = !this.sendingEmail;
           window.alert(`Error: ${this.appState.changePasswordState.errorMessage}`);
         }
       },
       (error: any) => {
         const errorMessage = error.error?.error || 'An error occurred';
+        this.sendingEmail = !this.sendingEmail;
         window.alert(`Error: ${errorMessage}`);
       }
     );

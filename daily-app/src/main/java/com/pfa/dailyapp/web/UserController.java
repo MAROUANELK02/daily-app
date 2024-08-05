@@ -138,15 +138,15 @@ public class UserController {
     }
 
     @PutMapping("/user/update")
-    public ResponseEntity<?> updateUser(@RequestBody UserDTOResponse userDTOResponse,
+    public ResponseEntity<?> updateUser(@RequestBody EditUserDTO editUserDTO,
                                         HttpServletRequest request) {
         try {
             Long tokenUserId = JwtUtils.getUserIdFromRequest(request);
-            Long userId = userDTOResponse.getUserId();
+            Long userId = editUserDTO.userId();
             if (!userId.equals(tokenUserId)) {
                 return ResponseEntity.status(403).body(new ErrorResponse("Non Autorisé"));
             }
-            userService.updateUser(userDTOResponse);
+            userService.updateUser(editUserDTO);
             return ResponseEntity.ok(new SuccessResponse("Mise à jour de l'utilisateur réussie"));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));

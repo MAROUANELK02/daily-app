@@ -5,6 +5,7 @@ import com.pfa.dailyapp.enums.TaskStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
@@ -25,5 +26,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Page<Task> findAllByStatusAndUserKeyword(TaskStatus status, String keyword, Pageable pageable);
 
     List<Task> findAllByUser_UserIdAndStatus(Long userId, TaskStatus status);
+
     List<Task> findAllByUser_UserIdAndStatusAndUpdatedAtAfter(Long userId, TaskStatus status, LocalDateTime updatedAt);
+
+    @Modifying
+    @Query("DELETE FROM Task t WHERE t.user.userId = :userId")
+    void deleteAllTasksByUser_UserId(Long userId);
 }

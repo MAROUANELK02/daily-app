@@ -1,5 +1,6 @@
 package com.pfa.dailyapp.services;
 
+import com.pfa.dailyapp.dtos.EditUserDTO;
 import com.pfa.dailyapp.dtos.UserDTORequest;
 import com.pfa.dailyapp.dtos.UserDTOResponse;
 import com.pfa.dailyapp.exceptions.UserNotFoundException;
@@ -10,7 +11,7 @@ public interface UserService {
     Page<UserDTOResponse> getUsers(int page, int size);
     UserDTOResponse getUserById(Long id) throws UserNotFoundException;
     UserDTOResponse saveUser(UserDTORequest user);
-    UserDTOResponse updateUser(UserDTOResponse user) throws UserNotFoundException;
+    UserDTOResponse updateUser(EditUserDTO user) throws UserNotFoundException;
     Page<UserDTOResponse> searchUsers(String query, int page, int size);
     void deleteUser(Long id) throws UserNotFoundException;
     UserDTOResponse addImage(Long userId, MultipartFile image) throws UserNotFoundException;

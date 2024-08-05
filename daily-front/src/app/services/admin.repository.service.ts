@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {AppStateService} from "./app-state.service";
 import {User} from "../models/user.model";
 import {Router} from "@angular/router";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class AdminRepositoryService {
       });
   }
 
-  extractValidationMessages(error: string): string[] {
+  private extractValidationMessages(error: string): string[] {
     const messages = [];
     const regex = /interpolatedMessage='([^']+)'/g;
     let match;
@@ -49,5 +50,8 @@ export class AdminRepositoryService {
     return messages;
   }
 
+  deleteUser(userId : number): Observable<any> {
+    return this.http.delete(`${this.host}/deleteUser/${userId}`)
+  }
 
 }

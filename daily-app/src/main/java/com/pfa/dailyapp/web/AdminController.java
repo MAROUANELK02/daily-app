@@ -39,9 +39,9 @@ public class AdminController {
     public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
         try {
             userService.deleteUser(userId);
-            return ResponseEntity.ok("L'utilisateur a été supprimé avec succès");
+            return ResponseEntity.ok(new SuccessResponse("L'utilisateur a été supprimé avec succès"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
 

@@ -5,6 +5,7 @@ import {forkJoin, Observable, of, switchMap} from "rxjs";
 import {User} from "../models/user.model";
 import {TasksRepositoryService} from "../services/tasks.repository.service";
 import {Task} from "../models/task.model";
+import {AdminRepositoryService} from "../services/admin.repository.service";
 
 @Component({
   selector: 'app-colleagues',
@@ -18,6 +19,7 @@ export class ColleaguesComponent implements OnInit {
   selectedTaskForDetails: any;
 
   constructor(public appState: AppStateService,
+              private adminService: AdminRepositoryService,
               private colleaguesRepositoryService: ColleaguesRepositoryService,
               private tasksRepositoryService: TasksRepositoryService) {
   }
@@ -121,5 +123,19 @@ export class ColleaguesComponent implements OnInit {
 
   closeDetailModal() {
     this.selectedTaskForDetails = null;
+  }
+
+  deleteUser(userId: number) {
+    if(window.confirm("Êtes-vous sure de vouloir supprimer cet utilisateur ?")) {
+      this.adminService.deleteUser(userId).subscribe({
+        next:(data) => {
+          window.alert(data.message);
+          this.fetchUsersAndImages();
+      }, error: (err) => {
+          console.log(err)
+          window.alert(err.error.error)
+        }
+      })
+    }
   }
 }

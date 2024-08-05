@@ -77,5 +77,12 @@ export class ColleaguesRepositoryService implements OnInit{
     return this.http.delete(this.host + `/image/${userId}`);
   }
 
-
+  editProfile(userId : number, email : string, username : string, jobTitle : string): Observable<any> {
+    let user : User = new User();
+    user.userId = userId;
+    user.email = email;
+    user.username = username;
+    user.jobTitle = jobTitle;
+    return this.http.put(this.host + '/user/update', user);
+  }
 }

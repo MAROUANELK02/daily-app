@@ -33,15 +33,20 @@
 
   <!-- User Cards -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <div *ngFor="let user of this.appState.usersState.users" [ngClass]="getUserCardClass(user.tasksCount)"
-      class="shadow-lg rounded-lg text-center p-6">
+    <div *ngFor="let user of appState.usersState.users" [ngClass]="getUserCardClass(user.tasksCount)"
+         class="relative shadow-lg rounded-lg text-center p-6">
       <img [src]="userImageUrls[user.userId]" class="rounded-full mx-auto mb-3" style="width: 100px; height: 100px;"
-        alt="User Image">
+           alt="User Image">
       <h5 class="text-lg font-semibold">{{ user.firstname + " " + user.lastname }}</h5>
       <p class="text-gray-1000">{{ user.jobTitle }}</p>
       <button
         class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
         (click)="openModal(user)">Voir les tâches</button>
+      <div *ngIf="appState.authState.roles.includes('ROLE_ADMIN')" class="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 bg-white rounded-full p-1">
+        <svg (click)="deleteUser(user.userId)" class="w-6 h-6 text-red-500 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </div>
     </div>
   </div>
 

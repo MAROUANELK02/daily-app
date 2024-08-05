@@ -1,21 +1,22 @@
 package com.pfa.dailyapp.services;
 
+import com.pfa.dailyapp.dtos.EditUserDTO;
 import com.pfa.dailyapp.dtos.UserDTORequest;
 import com.pfa.dailyapp.dtos.UserDTOResponse;
 import com.pfa.dailyapp.entities.User;
 import com.pfa.dailyapp.enums.ERole;
 import com.pfa.dailyapp.exceptions.UserNotFoundException;
-import com.pfa.dailyapp.mappers.RoleMapper;
 import com.pfa.dailyapp.mappers.UserMapper;
 import com.pfa.dailyapp.repositories.RoleRepository;
+import com.pfa.dailyapp.repositories.TaskRepository;
 import com.pfa.dailyapp.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,28 +27,31 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TaskRepository taskRepository;
 
     @Value("${upload.path}")
     private String uploadPath;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, PasswordEncoder passwordEncoder, TaskRepository taskRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.taskRepository = taskRepository;
     }
 
     @Override
     public Page<UserDTOResponse> getUsers(int page, int size) {
         log.info("Getting all users");
         Pageable pageable = Pageable.ofSize(size).withPage(page);
-        Page<User> users = userRepository.findAllByDeletedFalse(pageable);
+        Page<User> users = userRepository.findAll(pageable);
         return users.map(userMapper::toUserDTO);
     }
 
@@ -71,21 +75,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTOResponse updateUser(UserDTOResponse user) throws UserNotFoundException {
-        log.info("Updating user: {}", user);
-        User user1 = userRepository.findById(user.getUserId()).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
-        if(!user1.getFirstname().equals(user.getFirstname()))
-            user1.setFirstname(user.getFirstname());
-        if (!user1.getLastname().equals(user.getLastname()))
-            user1.setLastname(user.getLastname());
-        if (!user1.getEmail().equals(user.getEmail()))
-            user1.setEmail(user.getEmail());
-        if (!user1.getUsername().equals(user.getUsername()))
-            user1.setUsername(user.getUsername());
-        if (!user1.getJobTitle().equals(user.getJobTitle()))
-            user1.setJobTitle(user.getJobTitle());
+    public UserDTOResponse updateUser(EditUserDTO user) throws UserNotFoundException {
+        log.info("Updating user");
+        User user1 = userRepository.findById(user.userId()).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
+        if (!user1.getEmail().equals(user.email()))
+            user1.setEmail(user.email());
+        if (!user1.getUsername().equals(user.username()))
+            user1.setUsername(user.username());
+        if (!user1.getJobTitle().equals(user.jobTitle()))
+            user1.setJobTitle(user.jobTitle());
         user1.setUpdatedAt(LocalDateTime.now());
-        return userMapper.toUserDTO(user1);
+        User save = userRepository.save(user1);
+        log.info("Updating user successfully");
+        return userMapper.toUserDTO(save);
     }
 
     @Override
@@ -100,9 +102,11 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) throws UserNotFoundException {
         log.info("Deleting user by id: {}", id);
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
-        user.setDeleted(true);
-        user.setUpdatedAt(LocalDateTime.now());
-        userRepository.save(user);
+        log.info("Deleting tasks");
+        taskRepository.deleteAllTasksByUser_UserId(user.getUserId());
+        log.info("Tasks deleted successfully");
+        userRepository.deleteById(user.getUserId());
+        log.info("Deleting user successfully");
     }
 
     @Override
