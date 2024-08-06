@@ -12,6 +12,7 @@ import java.util.Map;
 
 public interface TaskService {
     Page<TaskDTOResponse> getTasksByUserId(Long userId, TaskStatus status, int page, int size);
+    Page<TaskDTOResponse> getCompletedTasksByUserId(Long userId, TaskStatus status, int page, int size);
     TaskDTOResponse getTaskById(Long id) throws TaskNotFoundException;
     Long getUserIdByTaskId(Long taskId) throws TaskNotFoundException;
     Page<TaskDTOResponse> getTasksHistory(int page, int size, String keyword);

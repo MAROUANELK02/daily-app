@@ -39,7 +39,15 @@ public class TaskServiceImpl implements TaskService {
     public Page<TaskDTOResponse> getTasksByUserId(Long userId, TaskStatus status, int page, int size) {
         log.info("Fetching tasks for user with id: {}", userId);
         Pageable pageable = Pageable.ofSize(size).withPage(page);
-        Page<Task> tasks = taskRepository.findByUserUserIdAndStatusOrderByPriority(userId, status, pageable);
+        Page<Task> tasks = taskRepository.findByUserIdAndStatusOrderByPriority(userId, status, pageable);
+        return tasks.map(taskMapper::toTaskDTO);
+    }
+
+    @Override
+    public Page<TaskDTOResponse> getCompletedTasksByUserId(Long userId, TaskStatus status, int page, int size) {
+        log.info("Fetching completed tasks for user with id: {}", userId);
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<Task> tasks = taskRepository.findByUserIdAndStatusOrderByPriorityAndDate(userId, status, pageable);
         return tasks.map(taskMapper::toTaskDTO);
     }
 

@@ -39,7 +39,7 @@ public class UserController {
     public ResponseEntity<?> getCompletedTasksByUserId(@PathVariable("userId") Long userId,
                                                        @RequestParam(name = "page", defaultValue = "0") int page,
                                                        @RequestParam(name = "size", defaultValue = "10") int size) {
-        Page<TaskDTOResponse> tasks = taskService.getTasksByUserId(userId, TaskStatus.DONE, page, size);
+        Page<TaskDTOResponse> tasks = taskService.getCompletedTasksByUserId(userId, TaskStatus.DONE, page, size);
         return ResponseEntity.ok(tasks);
     }
 
