@@ -10,6 +10,7 @@ import {AppStateService} from "../services/app-state.service";
 })
 export class StatisticsComponent implements OnInit{
   public chart: any;
+  public selectedDuration: number = 7;
 
   constructor(private taskService : TasksRepositoryService,
               private appState : AppStateService) {
@@ -19,18 +20,28 @@ export class StatisticsComponent implements OnInit{
     if(this.appState.authState.isAuthenticated) {
       this.appState.getCurrentUserImage();
     }
-    this.taskService.fetchCompletedStatistics(this.appState.authState.id).subscribe(
-      (next) => this.taskService.fetchInProgressStatistics(this.appState.authState.id).subscribe(
+    this.fetchStatistics(this.selectedDuration);
+  }
+
+  fetchStatistics(duration: number): void {
+    this.taskService.fetchCompletedStatistics(this.appState.authState.id, duration).subscribe(
+      (next) => this.taskService.fetchInProgressStatistics(this.appState.authState.id, duration).subscribe(
         (next) => this.createChart()
       )
-    )
+    );
+  }
+
+  onSearchClick(): void {
+    this.fetchStatistics(this.selectedDuration);
   }
 
   createChart() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
     const labels = Array.from(this.appState.statistics.keys());
-    const data = Array.from(this.appState.statistics.values());
     const inProgressLabels = Array.from(this.appState.inProgressStatistics.keys());
-    const inProgressData = Array.from(this.appState.inProgressStatistics.values());
 
     const allLabels = Array.from(new Set([...labels, ...inProgressLabels])).sort();
 
@@ -43,12 +54,12 @@ export class StatisticsComponent implements OnInit{
         labels: allLabels,
         datasets: [
           {
-            label: 'Done',
+            label: 'Complétées',
             data: mappedData,
             backgroundColor: 'blue',
           },
           {
-            label: 'In Progress',
+            label: 'En cours',
             data: mappedInProgressData,
             backgroundColor: 'red',
           }

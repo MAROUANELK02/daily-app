@@ -15,7 +15,13 @@
         <h3 class="font-bold text-white">{{ task.title }}</h3>
         <p class="text-white"><span class="font-semibold">Description:</span> <br>
           <button (click)="openDetailModal(task)" class="text-indigo-950 hover:text-indigo-950">
-            Voir détails
+            <strong>
+              <u>
+                <i>
+                  Voir détails
+                </i>
+              </u>
+            </strong>
           </button>
         </p>
         <p class="text-white"><span class="font-semibold">Priorité:</span> {{ task.priority === 'HIGH' ? 'Urgente' : task.priority === 'MEDIUM' ? 'Moyenne' : 'Normale' }}</p>
@@ -105,8 +111,14 @@
       <div class="p-2 rounded-lg shadow text-1xl max-w-sm bg-blue-500 text-white" *ngFor="let task of completedTasks">
         <h3 class="font-bold">{{ task.title }}</h3>
         <p><span class="font-semibold">Description:</span> <br>
-          <button (click)="openDetailModal(task)" class="text-indigo-950 hover:text-indigo-950">
-            Voir détails
+          <button (click)="openDetailModal(task)" class="text-white hover:text-white">
+            <strong>
+              <u>
+                <i>
+                  Voir détails
+                </i>
+              </u>
+            </strong>
           </button>
         </p>
         <p><span class="font-semibold">Priorité:</span> {{ task.priority === 'HIGH' ? 'Urgente' : task.priority === 'MEDIUM' ? 'Moyenne' : 'Normale' }}</p>
@@ -150,17 +162,17 @@
       <div class="fixed inset-0 bg-gray-600 bg-opacity-50 transition-opacity"></div>
       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full p-4">
         <div class="text-left">
-          <div class="mt-3 text-center sm:mt-0 sm:text-left">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">
+          <div class="mt-3 sm:mt-0 sm:text-left">
+            <h3 class="text-lg text-center leading-6 font-medium text-gray-900">
               Détails de la Tâche
             </h3>
-            <div class="mt-3">
+            <div class="mt-3 bg-gray-50">
               <!-- Removing text-gray-500 to avoid gray styling of the HTML content -->
-              <p class="text-sm" [innerHTML]="selectedTaskForDetails.description"></p>
+              <p class="text-sm text-start" [innerHTML]="selectedTaskForDetails.description"></p>
             </div>
           </div>
         </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
           <button type="button"
                   class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
                   (click)="closeDetailModal()">
