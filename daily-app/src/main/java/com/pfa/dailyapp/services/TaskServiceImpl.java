@@ -19,7 +19,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -130,5 +134,29 @@ public class TaskServiceImpl implements TaskService {
         if(task.getStatus().equals(TaskStatus.IN_PROGRESS))
             userService.decrementTasksCount(userId);
         log.info("Task deleted successfully");
+    }
+
+    @Override
+    public Map<String, Long> getCompletedTasksCountPerDayByUserId(Long userId, int days) {
+        LocalDateTime startDate = LocalDateTime.now().minusDays(days);
+        List<Object[]> result = taskRepository.findCompletedTasksCountPerDayByUserId(userId,startDate);
+        Map<String, Long> tasksCountPerDay = new LinkedHashMap<>();
+        for(Object[] row : result) {
+            LocalDate datePart = ((java.sql.Date) row[0]).toLocalDate();
+            tasksCountPerDay.put(datePart.toString(), (Long) row[1]);
+        }
+        return tasksCountPerDay;
+    }
+
+    @Override
+    public Map<String, Long> getInProgressTasksCountPerDayByUserId(Long userId, int days) {
+        LocalDateTime startDate = LocalDateTime.now().minusDays(days);
+        List<Object[]> result = taskRepository.findInProgressTasksCountPerDayByUserId(userId,startDate);
+        Map<String, Long> tasksCountPerDay = new LinkedHashMap<>();
+        for(Object[] row : result) {
+            LocalDate datePart = ((java.sql.Date) row[0]).toLocalDate();
+            tasksCountPerDay.put(datePart.toString(), (Long) row[1]);
+        }
+        return tasksCountPerDay;
     }
 }

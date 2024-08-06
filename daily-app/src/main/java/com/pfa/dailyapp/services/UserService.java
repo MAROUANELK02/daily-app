@@ -7,6 +7,9 @@ import com.pfa.dailyapp.exceptions.UserNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.Map;
+
 public interface UserService {
     Page<UserDTOResponse> getUsers(int page, int size);
     UserDTOResponse getUserById(Long id) throws UserNotFoundException;

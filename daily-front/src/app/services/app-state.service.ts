@@ -98,6 +98,10 @@ export class AppStateService {
     errorMessage :""
   }
 
+  public statistics: Map<string,number> = new Map();
+
+  public inProgressStatistics: Map<string,number> = new Map();
+
   setTasksHistoryState(state: any) {
     this.tasksHistoryState = { ...this.tasksHistoryState, ...state };
   }

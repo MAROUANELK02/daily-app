@@ -5,6 +5,7 @@ import {Task} from "../models/task.model";
 import {ApiResponse} from "../models/api-response.model";
 import {Observable, tap} from "rxjs";
 import {Router} from "@angular/router";
+import {data} from "autoprefixer";
 
 @Injectable({
   providedIn: 'root'
@@ -131,4 +132,39 @@ export class TasksRepositoryService {
       tasks => this.appState.setTasksCount(tasks.content.length)
     );
   }
+
+  public fetchCompletedStatistics(userId: number, size: number = 6): Observable<any> {
+    return this.http.get<{ [key: string]: number }>(`${this.host}/statistics/${userId}/completed`, {
+      params: {
+        size: size
+      }
+    }).pipe(
+      tap(data => {
+        if(this.appState.statistics != null) {
+          this.appState.statistics.clear();
+        }
+        Object.keys(data).forEach(key => {
+          this.appState.statistics.set(key, data[key]);
+        });
+      })
+    );
+  }
+
+  public fetchInProgressStatistics(userId: number, size: number = 6): Observable<any> {
+    return this.http.get<{ [key: string]: number }>(`${this.host}/statistics/${userId}/inProgress`, {
+      params: {
+        size: size
+      }
+    }).pipe(
+      tap(data => {
+        if(this.appState.inProgressStatistics != null) {
+          this.appState.inProgressStatistics.clear();
+        }
+        Object.keys(data).forEach(key => {
+          this.appState.inProgressStatistics.set(key, data[key]);
+        });
+      })
+    );
+  }
+
 }

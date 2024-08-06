@@ -32,4 +32,22 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Modifying
     @Query("DELETE FROM Task t WHERE t.user.userId = :userId")
     void deleteAllTasksByUser_UserId(Long userId);
+
+    @Query("SELECT FUNCTION('DATE', t.updatedAt), COUNT(t) " +
+            "FROM Task t " +
+            "WHERE t.user.userId = :userId " +
+            "AND t.status = 'DONE' " +
+            "AND t.updatedAt >= :startDate " +
+            "GROUP BY FUNCTION('DATE', t.updatedAt) " +
+            "ORDER BY FUNCTION('DATE', t.updatedAt) ASC")
+    List<Object[]> findCompletedTasksCountPerDayByUserId(Long userId, LocalDateTime startDate);
+
+    @Query("SELECT FUNCTION('DATE', t.createdAt), COUNT(t) " +
+            "FROM Task t " +
+            "WHERE t.user.userId = :userId " +
+            "AND t.status = 'IN_PROGRESS' " +
+            "AND t.createdAt >= :startDate " +
+            "GROUP BY FUNCTION('DATE', t.createdAt) " +
+            "ORDER BY FUNCTION('DATE', t.createdAt) ASC")
+    List<Object[]> findInProgressTasksCountPerDayByUserId(Long userId, LocalDateTime startDate);
 }

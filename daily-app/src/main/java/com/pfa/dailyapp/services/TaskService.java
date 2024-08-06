@@ -8,6 +8,8 @@ import com.pfa.dailyapp.exceptions.TaskNotFoundException;
 import com.pfa.dailyapp.exceptions.UserNotFoundException;
 import org.springframework.data.domain.Page;
 
+import java.util.Map;
+
 public interface TaskService {
     Page<TaskDTOResponse> getTasksByUserId(Long userId, TaskStatus status, int page, int size);
     TaskDTOResponse getTaskById(Long id) throws TaskNotFoundException;
@@ -18,4 +20,6 @@ public interface TaskService {
     TaskDTOResponse changeTaskStatus(TaskStatus status, Long id) throws TaskNotFoundException, UserNotFoundException;
     TaskDTOResponse changeTaskPriority(TaskPriority priority, Long id) throws TaskNotFoundException;
     void deleteTask(Long id) throws TaskNotFoundException, UserNotFoundException;
+    Map<String, Long> getCompletedTasksCountPerDayByUserId(Long userId, int days);
+    Map<String, Long> getInProgressTasksCountPerDayByUserId(Long userId, int days);
 }

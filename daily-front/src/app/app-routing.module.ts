@@ -12,6 +12,7 @@ import {AuthenticationGuard} from "./guards/authentication.guard";
 import {UserAuthorizationGuard} from "./guards/user-authorization.guard";
 import {AdminAuthorizationGuard} from "./guards/admin-authorization.guard";
 import {ProfileComponent} from "./profile/profile.component";
+import {StatisticsComponent} from "./statistics/statistics.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -23,6 +24,7 @@ const routes: Routes = [
   {path: "tasksHistory", component: TasksHistoryComponent, canActivate : [AuthenticationGuard, UserAuthorizationGuard]},
   {path: "addColleague", component: AddColleagueComponent, canActivate : [AuthenticationGuard, AdminAuthorizationGuard]},
   {path: "profile", component: ProfileComponent, canActivate : [AuthenticationGuard, UserAuthorizationGuard]},
+  {path: "statistics", component: StatisticsComponent, canActivate: [AuthenticationGuard, UserAuthorizationGuard]},
   {path: "forgot-password", component: ForgotPasswordComponent}
 ];
 

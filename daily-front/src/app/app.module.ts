@@ -19,6 +19,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import {QuillModule} from "ngx-quill";
 import { ProfileComponent } from './profile/profile.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     ForgotPasswordComponent,
     ProfileComponent,
     SidebarComponent,
+    StatisticsComponent,
   ],
   imports: [
     BrowserModule,

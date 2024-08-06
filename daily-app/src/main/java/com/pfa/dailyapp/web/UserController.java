@@ -93,6 +93,18 @@ public class UserController {
         }
     }
 
+    @GetMapping("/statistics/{userId}/completed")
+    public ResponseEntity<?> getCompletedTasksStatistics(@PathVariable("userId") Long userId,
+                                               @RequestParam(name = "size", defaultValue = "6") int size) {
+        return ResponseEntity.ok(taskService.getCompletedTasksCountPerDayByUserId(userId,size));
+    }
+
+    @GetMapping("/statistics/{userId}/inProgress")
+    public ResponseEntity<?> getInProgressTasksStatistics(@PathVariable("userId") Long userId,
+                                               @RequestParam(name = "size", defaultValue = "6") int size) {
+        return ResponseEntity.ok(taskService.getInProgressTasksCountPerDayByUserId(userId,size));
+    }
+
     @PostMapping("/task/{userId}")
     public ResponseEntity<?> saveTask(@PathVariable Long userId,
                                       @RequestBody TaskDTORequest taskDTORequest,
