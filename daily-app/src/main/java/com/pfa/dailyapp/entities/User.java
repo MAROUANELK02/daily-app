@@ -52,9 +52,6 @@ public class User {
     @Value("")
     private String image;
 
-    @Value("false")
-    private boolean deleted;
-
     private int tasksCount;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
