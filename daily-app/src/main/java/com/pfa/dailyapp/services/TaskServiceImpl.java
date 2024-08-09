@@ -2,7 +2,9 @@ package com.pfa.dailyapp.services;
 
 import com.pfa.dailyapp.dtos.TaskDTORequest;
 import com.pfa.dailyapp.dtos.TaskDTOResponse;
+import com.pfa.dailyapp.dtos.TasksCountDTO;
 import com.pfa.dailyapp.entities.Task;
+import com.pfa.dailyapp.entities.User;
 import com.pfa.dailyapp.enums.TaskPriority;
 import com.pfa.dailyapp.enums.TaskStatus;
 import com.pfa.dailyapp.exceptions.TaskNotFoundException;
@@ -10,6 +12,7 @@ import com.pfa.dailyapp.exceptions.UserNotFoundException;
 import com.pfa.dailyapp.mappers.TaskMapper;
 import com.pfa.dailyapp.mappers.UserMapper;
 import com.pfa.dailyapp.repositories.TaskRepository;
+import com.pfa.dailyapp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,6 +34,7 @@ import java.util.Map;
 @Slf4j
 public class TaskServiceImpl implements TaskService {
     private final UserMapper userMapper;
+    private final UserRepository userRepository;
     private TaskRepository taskRepository;
     private TaskMapper taskMapper;
     private UserService userService;
@@ -166,5 +170,12 @@ public class TaskServiceImpl implements TaskService {
             tasksCountPerDay.put(datePart.toString(), (Long) row[1]);
         }
         return tasksCountPerDay;
+    }
+
+    @Override
+    public TasksCountDTO getTasksCount(Long userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        List<Task> completedTasks = taskRepository.findAllByUser_UserIdAndStatus(userId, TaskStatus.DONE);
+        return new TasksCountDTO(user.getTasksCount(), completedTasks.size());
     }
 }

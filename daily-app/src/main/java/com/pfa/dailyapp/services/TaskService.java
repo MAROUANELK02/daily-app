@@ -2,6 +2,7 @@ package com.pfa.dailyapp.services;
 
 import com.pfa.dailyapp.dtos.TaskDTORequest;
 import com.pfa.dailyapp.dtos.TaskDTOResponse;
+import com.pfa.dailyapp.dtos.TasksCountDTO;
 import com.pfa.dailyapp.enums.TaskPriority;
 import com.pfa.dailyapp.enums.TaskStatus;
 import com.pfa.dailyapp.exceptions.TaskNotFoundException;
@@ -23,4 +24,5 @@ public interface TaskService {
     void deleteTask(Long id) throws TaskNotFoundException, UserNotFoundException;
     Map<String, Long> getCompletedTasksCountPerDayByUserId(Long userId, int days);
     Map<String, Long> getInProgressTasksCountPerDayByUserId(Long userId, int days);
+    TasksCountDTO getTasksCount(Long userId) throws UserNotFoundException;
 }

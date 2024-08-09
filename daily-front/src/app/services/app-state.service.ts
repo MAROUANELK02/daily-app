@@ -6,6 +6,8 @@ import {catchError, map, Observable, of} from "rxjs";
   providedIn: 'root'
 })
 export class AppStateService {
+  completedTasksCount: number = 0;
+  inProgressTasksCount: number = 0;
 
   constructor(private http : HttpClient) {
   }
@@ -22,10 +24,9 @@ export class AppStateService {
     errorMessage :"",
   }
 
-  tasksCount : number = 0;
-
-  public setTasksCount(count: number) {
-    this.tasksCount = count;
+  public setTasksCount(inProgress: number, completed: number) {
+    this.inProgressTasksCount = inProgress;
+    this.completedTasksCount = completed;
   }
 
   private getImageUri(): Observable<string> {

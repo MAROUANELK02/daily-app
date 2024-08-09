@@ -1,6 +1,7 @@
 package com.pfa.dailyapp.services;
 
 import com.pfa.dailyapp.dtos.EditUserDTO;
+import com.pfa.dailyapp.dtos.TasksCountDTO;
 import com.pfa.dailyapp.dtos.UserDTORequest;
 import com.pfa.dailyapp.dtos.UserDTOResponse;
 import com.pfa.dailyapp.exceptions.UserNotFoundException;

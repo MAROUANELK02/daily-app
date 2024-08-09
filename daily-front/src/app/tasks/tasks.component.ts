@@ -27,38 +27,38 @@ export class TasksComponent implements OnInit {
   prevPage() {
     if (this.appState.tasksState.currentPage > 0) {
       this.appState.tasksState.currentPage--;
-      this.fetchInProgressTasksByUserId();
+      this.fetchInProgressTasksByUserId(this.appState.authState.id);
     }
   }
 
   goToPage(index: number) {
     this.appState.tasksState.currentPage = index;
-    this.fetchInProgressTasksByUserId();
+    this.fetchInProgressTasksByUserId(this.appState.authState.id);
   }
 
   nextPage() {
     if (this.appState.tasksState.currentPage < this.appState.tasksState.totalPages - 1) {
       this.appState.tasksState.currentPage++;
-      this.fetchInProgressTasksByUserId();
+      this.fetchInProgressTasksByUserId(this.appState.authState.id);
     }
   }
 
   completedPrevPage() {
     if (this.appState.completedTasksState.currentPage > 0) {
       this.appState.completedTasksState.currentPage--;
-      this.fetchCompletedTasksByUserId();
+      this.fetchCompletedTasksByUserId(this.appState.authState.id);
     }
   }
 
   completedGoToPage(index: number) {
     this.appState.completedTasksState.currentPage = index;
-    this.fetchCompletedTasksByUserId();
+    this.fetchCompletedTasksByUserId(this.appState.authState.id);
   }
 
   completedNextPage() {
     if (this.appState.completedTasksState.currentPage < this.appState.completedTasksState.totalPages - 1) {
       this.appState.completedTasksState.currentPage++;
-      this.fetchCompletedTasksByUserId();
+      this.fetchCompletedTasksByUserId(this.appState.authState.id);
     }
   }
 
@@ -142,22 +142,18 @@ export class TasksComponent implements OnInit {
   }
 
   private fetchTasksByUserId(userId: number) {
-    this.taskService.getInProgressTasksByUserId(userId, {}).subscribe(
-      tasks => this.tasks = this.appState.tasksState.tasks
-    );
+    this.fetchInProgressTasksByUserId(userId);
+    this.fetchCompletedTasksByUserId(userId);
+  }
+
+  private fetchCompletedTasksByUserId(userId: number) {
     this.taskService.getCompletedTasksByUserId(userId, {}).subscribe(
       tasks => this.completedTasks = this.appState.completedTasksState.tasks
     );
   }
 
-  private fetchCompletedTasksByUserId() {
-    this.taskService.getCompletedTasksByUserId(this.appState.authState.id, {}).subscribe(
-      tasks => this.completedTasks = this.appState.completedTasksState.tasks
-    );
-  }
-
-  private fetchInProgressTasksByUserId() {
-    this.taskService.getInProgressTasksByUserId(this.appState.authState.id, {}).subscribe(
+  private fetchInProgressTasksByUserId(userId: number) {
+    this.taskService.getInProgressTasksByUserId(userId, {}).subscribe(
       tasks => this.tasks = this.appState.tasksState.tasks
     );
   }

@@ -4,7 +4,7 @@
   <div class="w-1/2 max-w-md flex flex-col">
 
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-semibold">En Cours ({{ tasks.length }})</h2>
+      <h2 class="text-lg font-semibold">En Cours ({{ appState.inProgressTasksCount }})</h2>
       <button class="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full" routerLink="/addTask">+</button>
     </div>
 
@@ -104,7 +104,7 @@
   <div class="w-1/2 max-w-md flex flex-col">
 
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-semibold">Complétées ({{ completedTasks.length }})</h2>
+      <h2 class="text-lg font-semibold">Complétées ({{ appState.completedTasksCount }})</h2>
     </div>
 
     <div class="space-y-2 flex-grow overflow-y-auto">
@@ -168,7 +168,7 @@
             </h3>
             <div class="mt-3 bg-gray-50">
               <!-- Removing text-gray-500 to avoid gray styling of the HTML content -->
-              <p class="text-sm text-start" [innerHTML]="selectedTaskForDetails.description"></p>
+              <p class="text-sm text-start p-3" [innerHTML]="selectedTaskForDetails.description"></p>
             </div>
           </div>
         </div>

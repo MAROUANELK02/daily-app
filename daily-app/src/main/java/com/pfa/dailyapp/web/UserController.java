@@ -105,6 +105,15 @@ public class UserController {
         return ResponseEntity.ok(taskService.getInProgressTasksCountPerDayByUserId(userId,size));
     }
 
+    @GetMapping("/user/{userId}/tasksCount")
+    public ResponseEntity<?> getTasksCount(@PathVariable("userId") Long userId) {
+        try {
+            return ResponseEntity.ok(taskService.getTasksCount(userId));
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
+
     @PostMapping("/task/{userId}")
     public ResponseEntity<?> saveTask(@PathVariable Long userId,
                                       @RequestBody TaskDTORequest taskDTORequest,
