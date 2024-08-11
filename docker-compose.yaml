@@ -56,7 +56,7 @@ services:
       dockerfile: Dockerfile
     container_name: dailyMeeting-frontend-container
     ports:
-      - "4200:4200"
+      - "80:4200"
     depends_on:
       - daily-meeting-backend
 
@@ -68,7 +68,7 @@ services:
       PMA_HOST: mysql
       PMA_PORT: 3306
     ports:
-      - "8080:80"
+      - "8085:80"
     depends_on:
       - mysql
 
