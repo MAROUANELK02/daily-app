@@ -52,7 +52,7 @@ services:
     image: marouanelk02/daily-app-frontend:latest
     container_name: dailyMeeting-frontend-container
     ports:
-      - "80:4200"
+      - "80:80"
     depends_on:
       - daily-meeting-backend
 
