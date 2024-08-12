@@ -36,3 +36,9 @@ jobs:
           docker pull marouanelk02/daily-app-backend:latest
           docker tag marouanelk02/daily-app-backend:latest ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-backend:latest
           docker push ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-backend:latest
+
+      - name: Pull MySQL image from Docker Hub
+        run: |
+          docker pull mysql:latest
+          docker tag mysql:latest ${{ secrets.ACR_NAME }}.azurecr.io/mysql:latest
+          docker push ${{ secrets.ACR_NAME }}.azurecr.io/mysql:latest
