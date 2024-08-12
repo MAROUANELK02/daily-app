@@ -42,3 +42,13 @@ jobs:
           docker pull mysql:latest
           docker tag mysql:latest ${{ secrets.ACR_NAME }}.azurecr.io/mysql:latest
           docker push ${{ secrets.ACR_NAME }}.azurecr.io/mysql:latest
+
+      - name: Deploy images
+        run: |
+            chmod +x deploy.sh
+            ./deploy.sh
+          env:
+            AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+            AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+            AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+            ACR_NAME: ${{ secrets.ACR_NAME }}
