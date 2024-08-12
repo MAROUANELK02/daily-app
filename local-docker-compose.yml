@@ -6,7 +6,7 @@ services:
     image: mysql:latest
     container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: FORTINATE-my-secret@9630
+      MYSQL_ROOT_PASSWORD: my-secret-pw
       MYSQL_DATABASE: daily_app
     ports:
       - "3306:3306"
@@ -20,7 +20,9 @@ services:
 
   # Service Backend
   daily-meeting-backend:
-    image: marouanelk02/daily-app-backend:latest
+    build:
+      context: ./daily-app
+      dockerfile: Dockerfile
     container_name: dailyMeeting-backend-container
     ports:
       - "5000:5000"
@@ -30,7 +32,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/daily_app?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: FORTINATE-my-secret@9630
+      SPRING_DATASOURCE_PASSWORD: my-secret-pw
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
       SPRING_JPA_SHOW_SQL: "false"
@@ -49,23 +51,29 @@ services:
 
   # Service Frontend
   daily-meeting-frontend:
-    image: marouanelk02/daily-app-frontend:latest
+    build:
+      context: ./daily-front
+      dockerfile: Dockerfile
     container_name: dailyMeeting-frontend-container
     ports:
       - "80:80"
     depends_on:
       - daily-meeting-backend
 
+  # Service phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-container
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "8085:80"
+    depends_on:
+      - mysql
+
 volumes:
   mysql-data:
-    driver: azure_file
-    driver_opts:
-      share_name: mysql-data
-      storage_account_name: azurefilesharedailyapp
-      storage_account_key: MajltCJxudlgBrwkc9L7fq8B/Mn/K7LbtKM+IqQrMAfFTju5dfNrLFiWTLk9WjZ/H76NEVxMGfSK+ASt7LIOAA==
+    external:
+      name: cc55b31a04abc84520adeed85fd2efe44c731f4092a4fd95340dd494eb128070
   backend-images:
-    driver: azure_file
-    driver_opts:
-      share_name: backend-images
-      storage_account_name: azurefilesharedailyapp
-      storage_account_key: MajltCJxudlgBrwkc9L7fq8B/Mn/K7LbtKM+IqQrMAfFTju5dfNrLFiWTLk9WjZ/H76NEVxMGfSK+ASt7LIOAA==
