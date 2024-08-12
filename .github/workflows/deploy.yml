@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: Pull and Push Docker Images
 
 on:
   push:
@@ -6,31 +6,33 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  pull-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Azure Container Registry Login
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_NAME }}.azurecr.io
-        username: ${{ secrets.ACR_NAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+      - name: Azure Container Registry Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_NAME }}.azurecr.io
+          username: ${{ secrets.ACR_NAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
-    - name: Build and push backend image
-      run: |
-        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-backend:latest -f daily-app/Dockerfile .
-        docker push ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-backend:latest
+      - name: Pull frontend image from Docker Hub
+        run: |
+          docker pull marouanelk02/daily-app-frontend:latest
+          docker tag marouanelk02/daily-app-frontend:latest ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-frontend:latest
+          docker push ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-frontend:latest
 
-    - name: Build and push frontend image
-      run: |
-        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-frontend:latest -f daily-front/Dockerfile .
-        docker push ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-frontend:latest
+      - name: Pull backend image from Docker Hub
+        run: |
+          docker pull marouanelk02/daily-app-backend:latest
+          docker tag marouanelk02/daily-app-backend:latest ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-backend:latest
+          docker push ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-backend:latest
