@@ -27,10 +27,10 @@ jobs:
 
     - name: Build and push backend image
       run: |
-        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-backend:latest -f backend/Dockerfile .
+        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-backend:latest -f daily-app/Dockerfile .
         docker push ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-backend:latest
 
     - name: Build and push frontend image
       run: |
-        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-frontend:latest -f frontend/Dockerfile .
+        docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-frontend:latest -f daily-front/Dockerfile .
         docker push ${{ secrets.ACR_NAME }}.azurecr.io/daily-app-frontend:latest
