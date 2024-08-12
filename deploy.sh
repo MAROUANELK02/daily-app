@@ -23,10 +23,10 @@ MAIL_USERNAME="marouanelk02@gmail.com"
 MAIL_PASSWORD="ipzprwexdihebsxd"
 
 # Create resource group
-az group create --name $RESOURCE_GROUP --location $LOCATION
+#az group create --name $RESOURCE_GROUP --location $LOCATION
 
 # Create virtual network and subnet
-az network vnet create --resource-group $RESOURCE_GROUP --name $VNET_NAME --address-prefix 10.0.0.0/16 --subnet-name $SUBNET_NAME --subnet-prefix 10.0.0.0/24
+#az network vnet create --resource-group $RESOURCE_GROUP --name $VNET_NAME --address-prefix 10.0.0.0/16 --subnet-name $SUBNET_NAME --subnet-prefix 10.0.0.0/24
 
 # Create MySQL container
 az container create --resource-group $RESOURCE_GROUP --name $MYSQL_CONTAINER_NAME --image $MYSQL_IMAGE --cpu 1 --memory 1.5 --vnet $VNET_NAME --subnet $SUBNET_NAME --environment-variables MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD MYSQL_DATABASE=$MYSQL_DATABASE
