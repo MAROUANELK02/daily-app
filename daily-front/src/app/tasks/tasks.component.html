@@ -12,7 +12,7 @@
       <div
         [ngClass]="{'bg-red-500': task.priority === 'HIGH', 'bg-yellow-500': task.priority === 'MEDIUM', 'bg-green-400': task.priority === 'LOW'}"
         class="p-2 rounded-lg shadow text-1xl max-w-sm relative" *ngFor="let task of tasks">
-        <h3 class="font-bold text-white">{{ task.title }}</h3>
+        <h5 class="font-bold text-white">{{ task.title }}</h5>
         <p class="text-white"><span class="font-semibold">Description:</span> <br>
           <button (click)="openDetailModal(task)" class="text-indigo-950 hover:text-indigo-950">
             <strong>
@@ -109,7 +109,7 @@
 
     <div class="space-y-2 flex-grow overflow-y-auto">
       <div class="p-2 rounded-lg shadow text-1xl max-w-sm bg-blue-500 text-white" *ngFor="let task of completedTasks">
-        <h3 class="font-bold">{{ task.title }}</h3>
+        <h5 class="font-bold">{{ task.title }}</h5>
         <p><span class="font-semibold">Description:</span> <br>
           <button (click)="openDetailModal(task)" class="text-white hover:text-white">
             <strong>

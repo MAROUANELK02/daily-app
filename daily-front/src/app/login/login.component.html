@@ -6,7 +6,9 @@
   <div
     class='w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700'>
     <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="handleLogin()">
-      <h2 class="text-xl font-medium text-gray-900 dark:text-white">S'identifier</h2>
+      <h2 class="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        S'identifier
+      </h2>
       <div>
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom d'utilisateur ou adresse e-mail</label>
         <input type="text" formControlName="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500

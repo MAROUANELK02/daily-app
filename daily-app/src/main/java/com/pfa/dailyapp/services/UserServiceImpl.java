@@ -23,11 +23,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -66,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTOResponse saveUser(UserDTORequest userDTORequest) {
+    public void saveUser(UserDTORequest userDTORequest) {
         log.info("Saving user: {}", userDTORequest);
         User user = userMapper.toUser(userDTORequest);
         user.setPassword(passwordEncoder.encode(userDTORequest.getPassword()));
@@ -74,11 +71,11 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         user.setRoles(List.of(roleRepository.findByRoleName(ERole.ROLE_USER)));
         User savedUser = userRepository.save(user);
-        return userMapper.toUserDTO(savedUser);
+        userMapper.toUserDTO(savedUser);
     }
 
     @Override
-    public UserDTOResponse updateUser(EditUserDTO user) throws UserNotFoundException {
+    public void updateUser(EditUserDTO user) throws UserNotFoundException {
         log.info("Updating user");
         User user1 = userRepository.findById(user.userId()).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
         if (!user1.getEmail().equals(user.email()))
@@ -90,7 +87,7 @@ public class UserServiceImpl implements UserService {
         user1.setUpdatedAt(LocalDateTime.now());
         User save = userRepository.save(user1);
         log.info("Updating user successfully");
-        return userMapper.toUserDTO(save);
+        userMapper.toUserDTO(save);
     }
 
     @Override
@@ -113,7 +110,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTOResponse addImage(Long userId, MultipartFile file) throws UserNotFoundException {
+    public void addImage(Long userId, MultipartFile file) throws UserNotFoundException {
         log.info("Adding image to user with id: {}", userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
 
@@ -136,11 +133,11 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         User save = userRepository.save(user);
         log.info("Image added successfully");
-        return userMapper.toUserDTO(save);
+        userMapper.toUserDTO(save);
     }
 
     @Override
-    public UserDTOResponse updateImage(Long userId, MultipartFile file) throws UserNotFoundException {
+    public void updateImage(Long userId, MultipartFile file) throws UserNotFoundException {
         log.info("Updating image for user with id: {}", userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
 
@@ -175,7 +172,7 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         User updatedUser = userRepository.save(user);
         log.info("Image updated successfully");
-        return userMapper.toUserDTO(updatedUser);
+        userMapper.toUserDTO(updatedUser);
     }
 
     @Override
