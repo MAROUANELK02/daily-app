@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {AppStateService} from "./app-state.service";
 import {ColleaguesRepositoryService} from "./colleagues.repository.service";
+import { environment } from "../../../environments/environment.prod";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthRepositoryService {
-  host:string = "http://localhost:5000/api/auth/signin";
+  host : string = `${environment.apiUrl}/auth/signin`;
 
   constructor(private http : HttpClient, private appState : AppStateService,
               private userService : ColleaguesRepositoryService) {

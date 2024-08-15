@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {catchError, map, Observable, of} from "rxjs";
+import { environment } from "../../../environments/environment.prod";
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,7 @@ import {catchError, map, Observable, of} from "rxjs";
 export class AppStateService {
   completedTasksCount: number = 0;
   inProgressTasksCount: number = 0;
+  host : string = `${environment.apiUrl}`;
 
   constructor(private http : HttpClient) {
   }
@@ -30,7 +32,7 @@ export class AppStateService {
   }
 
   private getImageUri(): Observable<string> {
-    return this.http.get(`http://localhost:5000/api/users/image/${this.authState.id}`,
+    return this.http.get(`${this.host}/users/image/${this.authState.id}`,
       { responseType: 'blob' }).pipe(
       map((imageBlob: Blob) => {
         return window.URL.createObjectURL(imageBlob);

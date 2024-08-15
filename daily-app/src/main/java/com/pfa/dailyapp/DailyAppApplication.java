@@ -39,14 +39,14 @@ public class DailyAppApplication {
                 Role roleUser = Role.builder().roleName(ERole.ROLE_USER).build();
                 roleRepository.save(roleUser);
             }
-            if(!userRepository.existsByUsername("Mehdi-OUADOU")) {
+            if(!userRepository.existsByUsername("administrator")) {
                 User user = User.builder()
-                        .firstname("Mehdi")
-                        .lastname("OUADOU")
-                        .email("mehdi.ouadou@hps-worldwide.com")
-                        .username("Mehdi-OUADOU")
+                        .firstname("admin")
+                        .lastname("admin")
+                        .email("admin@example.com")
+                        .username("administrator")
                         .password(passwordEncoder.encode("Pass@word1"))
-                        .jobTitle("Head of Operations")
+                        .jobTitle("Administrator")
                         .tasksCount(0)
                         .roles(List.of(roleRepository.findByRoleName(ERole.ROLE_ADMIN),
                                 roleRepository.findByRoleName(ERole.ROLE_USER)))

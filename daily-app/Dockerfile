@@ -13,6 +13,6 @@ FROM openjdk:17-jdk-slim
 
 COPY --from=build /app/target/daily-app-0.0.1-SNAPSHOT.jar /app/daily-app-0.0.1-SNAPSHOT.jar
 
-EXPOSE 8080
+EXPOSE 5000
 
 CMD ["java", "-jar", "/app/daily-app-0.0.1-SNAPSHOT.jar"]

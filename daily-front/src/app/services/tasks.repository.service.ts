@@ -5,13 +5,13 @@ import {Task} from "../models/task.model";
 import {ApiResponse} from "../models/api-response.model";
 import {Observable, tap} from "rxjs";
 import {Router} from "@angular/router";
-import {data} from "autoprefixer";
+import { environment } from "../../../environments/environment.prod";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TasksRepositoryService {
-  host : string = "http://localhost:5000/api/users";
+  host : string = `${environment.apiUrl}/users`;
 
   constructor(private http : HttpClient, private appState : AppStateService,private router: Router) { }
 

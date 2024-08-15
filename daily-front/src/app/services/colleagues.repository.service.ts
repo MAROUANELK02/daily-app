@@ -4,12 +4,13 @@ import {AppStateService} from "./app-state.service";
 import {User} from "../models/user.model";
 import {ApiResponse} from "../models/api-response.model";
 import {catchError, map, Observable, of, tap} from "rxjs";
+import { environment } from "../../../environments/environment.prod";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ColleaguesRepositoryService implements OnInit{
-  host : string = "http://localhost:5000/api/users";
+  host : string = `${environment.apiUrl}/users`;
 
   constructor(private http : HttpClient, private appState : AppStateService) { }
 
@@ -77,9 +78,11 @@ export class ColleaguesRepositoryService implements OnInit{
     return this.http.delete(this.host + `/image/${userId}`);
   }
 
-  editProfile(userId : number, email : string, username : string, jobTitle : string): Observable<any> {
+  editProfile(userId : number, firstname : string, lastname : string, email : string, username : string, jobTitle : string): Observable<any> {
     let user : User = new User();
     user.userId = userId;
+    user.firstname = firstname;
+    user.lastname = lastname;
     user.email = email;
     user.username = username;
     user.jobTitle = jobTitle;

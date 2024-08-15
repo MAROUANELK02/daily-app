@@ -3,12 +3,13 @@ import {HttpClient} from "@angular/common/http";
 import {AppStateService} from "./app-state.service";
 import {catchError, Observable, tap, throwError} from "rxjs";
 import {Router} from "@angular/router";
+import { environment } from "../../../environments/environment.prod";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChangePasswordRepositoryService {
-  host : string = "http://localhost:5000/api/auth/";
+  host : string = `${environment.apiUrl}/auth/`;
 
   constructor(private httpClient : HttpClient,
               private appState : AppStateService,

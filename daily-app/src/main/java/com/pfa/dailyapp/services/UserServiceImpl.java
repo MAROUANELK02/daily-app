@@ -84,6 +84,10 @@ public class UserServiceImpl implements UserService {
             user1.setUsername(user.username());
         if (!user1.getJobTitle().equals(user.jobTitle()))
             user1.setJobTitle(user.jobTitle());
+        if (!user1.getFirstname().equals(user.firstname()))
+            user1.setFirstname(user.firstname());
+        if (!user1.getLastname().equals(user.lastname()))
+            user1.setLastname(user.lastname());
         user1.setUpdatedAt(LocalDateTime.now());
         User save = userRepository.save(user1);
         log.info("Updating user successfully");

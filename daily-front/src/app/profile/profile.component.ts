@@ -21,6 +21,16 @@ export class ProfileComponent implements OnInit {
               private authService : AuthRepositoryService,
               private route : Router,
               private userService: ColleaguesRepositoryService) {
+    this.form = this.fb.group({
+      password: this.fb.control(""),
+      newPassword: this.fb.control(""),
+      confirmedPassword: this.fb.control(""),
+      firstname: this.fb.control(""),
+      lastname: this.fb.control(""),
+      email: this.fb.control(""),
+      username: this.fb.control(""),
+      jobTitle: this.fb.control(""),
+    });
   }
 
   ngOnInit() {
@@ -41,13 +51,12 @@ export class ProfileComponent implements OnInit {
   }
 
   private formInitialization() {
-    this.form = this.fb.group({
-      password: this.fb.control(""),
-      newPassword: this.fb.control(""),
-      confirmedPassword: this.fb.control(""),
-      email: [this.user.email],
-      username: [this.user.username],
-      jobTitle: [this.user.jobTitle]
+    this.form.patchValue({
+      firstname: this.user.firstname,
+      lastname: this.user.lastname,
+      email: this.user.email,
+      username: this.user.username,
+      jobTitle: this.user.jobTitle
     });
   }
 
@@ -106,7 +115,8 @@ export class ProfileComponent implements OnInit {
 
   editProfile() {
     if (window.confirm("Êtes vous sûr de vouloir modifier vos coordonnées ?")) {
-      this.userService.editProfile(this.user.userId, this.form.value.email, this.form.value.username, this.form.value.jobTitle).subscribe({
+      this.userService.editProfile(this.user.userId, this.form.value.firstname, this.form.value.lastname,
+        this.form.value.email, this.form.value.username, this.form.value.jobTitle).subscribe({
         next: (data) => {
           window.alert(data.message);
           if(this.user.username !== this.form.value.username) {
@@ -119,7 +129,7 @@ export class ProfileComponent implements OnInit {
         error: (err) => {
           window.alert(err.error[0])
         }
-      })
+      });
     }
   }
 }

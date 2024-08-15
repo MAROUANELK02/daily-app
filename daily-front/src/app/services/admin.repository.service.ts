@@ -4,12 +4,13 @@ import {AppStateService} from "./app-state.service";
 import {User} from "../models/user.model";
 import {Router} from "@angular/router";
 import {Observable} from "rxjs";
+import { environment } from "../../../environments/environment.prod";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminRepositoryService {
-  host : string = "http://localhost:5000/api/admin";
+  host : string = `${environment.apiUrl}/admin`;
 
   constructor(private http : HttpClient, private appState : AppStateService,
               private router : Router) { }

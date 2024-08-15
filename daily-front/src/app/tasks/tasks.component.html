@@ -87,8 +87,11 @@
           <button class="px-2 py-1 bg-gray-200 rounded" (click)="prevPage()">Previous</button>
         </li>
         <li *ngFor="let page of [].constructor(appState.tasksState.totalPages); let index = index">
-          <button class="px-2 py-1 bg-gray-200 rounded" (click)="goToPage(index)"
-                  [ngClass]="{'bg-blue-500 text-black': appState.tasksState.currentPage === index}">
+          <button class="px-2 py-1 rounded" (click)="goToPage(index)"
+                  [ngClass]="{
+          'bg-blue-500 text-white': appState.tasksState.currentPage === index,
+          'bg-gray-200': appState.tasksState.currentPage !== index
+        }">
             {{ index + 1 }}
           </button>
         </li>
@@ -144,8 +147,11 @@
           <button class="px-2 py-1 bg-gray-200 rounded" (click)="completedPrevPage()">Previous</button>
         </li>
         <li *ngFor="let page of [].constructor(appState.completedTasksState.totalPages); let index = index">
-          <button class="px-2 py-1 bg-gray-200 rounded" (click)="completedGoToPage(index)"
-                  [ngClass]="{'bg-blue-500 text-black': appState.completedTasksState.currentPage === index}">
+          <button class="px-2 py-1 rounded" (click)="completedGoToPage(index)"
+                  [ngClass]="{
+          'bg-blue-500 text-white': appState.completedTasksState.currentPage === index,
+          'bg-gray-200': appState.completedTasksState.currentPage !== index
+        }">
             {{ index + 1 }}
           </button>
         </li>
