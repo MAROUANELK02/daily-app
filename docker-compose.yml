@@ -6,7 +6,7 @@ services:
     image: mysql:latest
     container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_ROOT_PASSWORD: database_key
       MYSQL_DATABASE: daily_app
     ports:
       - "3306:3306"
@@ -32,7 +32,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/daily_app?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: my-secret-pw
+      SPRING_DATASOURCE_PASSWORD: database_key
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
       SPRING_JPA_SHOW_SQL: "false"
@@ -42,8 +42,8 @@ services:
       LOGO_PATH: /app/src/main/resources/static/hps.png
       SPRING_MAIL_HOST: smtp.gmail.com
       SPRING_MAIL_PORT: "587"
-      SPRING_MAIL_USERNAME: marouanelk02@gmail.com
-      SPRING_MAIL_PASSWORD: ipzprwexdihebsxd
+      SPRING_MAIL_USERNAME: mail_address
+      SPRING_MAIL_PASSWORD: mail_key
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
     volumes:
@@ -74,6 +74,4 @@ services:
 
 volumes:
   mysql-data:
-    external:
-      name: cc55b31a04abc84520adeed85fd2efe44c731f4092a4fd95340dd494eb128070
   backend-images:
